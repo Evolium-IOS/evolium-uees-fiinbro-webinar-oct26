@@ -1,74 +1,72 @@
 # Guía del presentador
 
-El Experimento 01 reproduce dos flujos habituales: pegar código en un chat y pedir un cambio dentro de un repositorio que contiene estándares. El Experimento 02 presenta extracción y validación de datos bancarios.
+El Experimento 01 compara trabajar con una función pegada en el chat frente a trabajar con la misma función dentro de un repositorio con un **contrato de negocio documentado**. El Experimento 02 presenta extracción y validación de PDF bancarios.
 
-## Antes de presentar
+## Preparación
 
-- Claude Web abierto en una conversación nueva sin proyecto, adjuntos ni repositorios conectados.
-- Tener abierto el archivo **experiments/01-ai-engineering-harness/prompts/claude-web.md**.
-- Tener abierto el archivo **experiments/01-ai-engineering-harness/prompts/claude-code.md**.
-- Usar la misma familia y versión de modelo si está disponible; registrar cualquier diferencia.
-- VS Code abierto en **C:\Evolium\webinar-experiment-01-live**.
-- Git del experimento restaurado a **demo: baseline** (7 PASS y 1 FAIL).
-- Claude Code preparado para nueva sesión en la terminal integrada.
+- Claude Web en conversación nueva, sin proyecto ni adjuntos.
+- Abrir prompts/claude-web.md y prompts/claude-code.md.
+- Modelos de la misma familia y versión, si está disponible.
+- VS Code abierto en C:\Evolium\webinar-experiment-01-live.
+- Copia de práctica actualizada con \`reset-demo.ps1 -ActualizarPlantilla\` si fue creada antes de la actualización.
+- Línea base verificada: **11 pruebas, 8 PASS y 3 FAIL intencionales**.
+- Una sesión nueva de Claude Code lista desde la terminal integrada.
 - Streamlit del Experimento 02 iniciado antes del webinar.
-- Ventanas y tamaños de fuente preparados. Credenciales ocultas.
-- Respaldo de capturas/evidencias de un ensayo previo, claramente identificado.
+- Credenciales ocultas y evidencia del ensayo disponible como respaldo.
 
 ## Experimento 01 (4 a 5 minutos)
 
-### 1. Pregunta e hipótesis
+### Pregunta
 
-**Pregunta:** ¿qué cambia si pedimos la misma corrección con código pegado, frente a trabajar en un proyecto con reglas, tests y Git?
+> "¿Qué ocurre si pedimos a la IA que corrija un fragmento de código, pero la empresa tiene reglas que el código por sí solo no puede explicar?"
 
-**Hipótesis:** el entorno de ingeniería ayuda a descubrir requisitos y comprobar el cambio sobre el sistema existente.
+**Hipótesis:** el repositorio permite descubrir criterios que no figuran en el código pegado y comprobarlos antes de declarar una corrección.
 
-> "En las empresas casi nunca empezamos de cero. Ya existen sistemas, estándares y comportamientos que debemos conservar."
+### Claude Web
 
-### 2. Claude Web
+1. Iniciar conversación nueva.
+2. Pegar el contenido de **prompts/claude-web.md**, incluido el código.
+3. Mostrar la propuesta o la solicitud de aclaraciones.
+4. No adjuntar ni explicar el contrato interno de negocio.
 
-1. Abrir nueva conversación.
-2. Copiar **todo el contenido de prompts/claude-web.md**, que incluye la función Python.
-3. Mostrar la respuesta y si asumió una definición de customer_id, solicitó aclaraciones o ejecutó pruebas en un entorno aislado.
-4. No adjuntar requisitos internos; no transferir el parche al repo local.
+> "Esta solución podría parecer correcta. ¿Pero conoce nuestras excepciones empresariales? No se las dimos."
 
-> "El modelo recibió un código que parece sencillo, pero no conoce todavía las reglas de esta empresa."
+### Claude Code en VS Code
 
-### 3. Claude Code en terminal integrada de VS Code
+1. Confirmar carpeta de práctica y mostrar línea base (8 PASS, 3 FAIL).
+2. Abrir sesión nueva con \`claude\`.
+3. Pegar **prompts/claude-code.md**. Incluye la ruta al archivo Python, no el código.
+4. Observar si el agente consulta AGENTS.md, CLAUDE.md, NEXT_TASK.md y el contrato en \`docs/\`.
+5. Dejar que modifique y ejecute las pruebas. No hacer commits ni pushes.
+6. Ejecutar pruebas y revisar \`git diff\` de forma independiente.
 
-1. Verificar ruta **C:\Evolium\webinar-experiment-01-live** y mostrar la línea base (7 PASS, 1 FAIL).
-2. Iniciar una nueva sesión de Claude Code.
-3. Copiar **todo el contenido de prompts/claude-code.md**. El prompt cambia el bloque de código pegado por la ruta del archivo.
-4. Observar si consulta NEXT_TASK.md, AGENTS.md, CLAUDE.md y los tests existentes.
-5. Permitir la corrección y ejecución de pruebas. Sin commits ni pushes.
-6. Verificar por separado con unittest y git diff.
+### Revelación del contrato y conclusión
 
-> "La tarea funcional es la misma, pero aquí el agente puede consultar el código y las reglas existentes. No le tuve que copiar manualmente cada documento."
+Mostrar **docs/CONTRATO_IDENTIFICADOR_CLIENTE.md** después de la ejecución. Explicar que la empresa tiene una norma concreta sobre formato y exclusiones que no estaba en el mensaje de Claude Web.
 
-### 4. Conclusión
+> "La diferencia no es que el chat no pueda programar. Es que una empresa tiene requisitos, excepciones y pruebas. Un cambio solo es confiable cuando los respeta y podemos comprobarlo."
 
-> "La IA genera propuestas en ambos contextos. Lo que aporta el entorno de ingeniería es continuidad con el código existente, reglas persistentes y formas de verificar los cambios."
-
-**Límites:** no son prompts textualmente idénticos ni contextos equivalentes, aunque la tarea es la misma. No afirmar que un modelo sea universalmente mejor, ni que el código del chat necesariamente habría roto algo.
+**Importante:** la documentación de negocio es ficticia y solo existe para el ejercicio; no representa políticas universales. Sin probar la solución web en otra copia del repositorio, no se puede afirmar que habría fallado en producción.
 
 [Guía paso a paso](experiments/01-ai-engineering-harness/README.md) | [Bitácora](experiments/01-ai-engineering-harness/BITACORA.md)
 
 ## Experimento 02 (4 a 5 minutos)
 
-1. Formular la pregunta sobre confiabilidad de datos.
-2. Abrir Streamlit previamente iniciado; cargar PDF de demostración.
-3. Mostrar ruta TEXT o VISION.
+1. Formular la pregunta sobre datos confiables.
+2. Abrir Streamlit y cargar un PDF de demostración.
+3. Mostrar routing TEXT o VISION.
 4. Ejecutar extracción y validación.
 5. Mostrar datos, evidencia, PASS/FAIL/UNCERTAIN y metadatos.
-6. Explicar reparación solo si ocurrió en la ejecución.
-7. Preguntar qué se necesitaría para utilizar estos datos en una operación real.
+6. Explicar la reparación solo si fue observada.
+7. Relacionar con reglas, contexto, revisión humana y decisiones.
 
-> "Extraer el dato era solo el comienzo. Una operación real requiere reglas, contexto, revisión humana, decisiones y gobernanza."
+> "Extraer el dato era solo el comienzo."
 
-El vínculo con ORION es conceptual, no una transformación literal del extractor.
+ORION es un ejemplo de sistemas que enfrentan retos operativos más amplios; el extractor no es literalmente ORION.
 
-## Seguridad durante la demostración
+## Seguridad
 
-- No mostrar API keys, archivos .env, credenciales ni documentos bancarios privados.
-- No instalar dependencias en vivo ni escribir código manualmente.
-- Si una ejecución falla, usar evidencia real de un ensayo y señalar que es un ensayo.
+- No mostrar claves, archivos \`.env\`, credenciales ni documentos privados.
+- No instalar dependencias en vivo.
+- No escribir manualmente código de la demo.
+- Si falla una ejecución, usar material verificado de ensayo y aclararlo.

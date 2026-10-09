@@ -1,7 +1,7 @@
-# Instrucciones para Claude Code
+# Instrucciones de ingeniería para Claude Code
 
-Lee `AGENTS.md` y `NEXT_TASK.md` antes de modificar archivos.
+Antes de editar código, lee `AGENTS.md` y la tarea en `NEXT_TASK.md`.
 
-La tarea es intencionalmente pequeña. Mantén la implementación mínima, conserva el comportamiento existente, ejecuta todas las pruebas y revisa `git diff` antes de reportar finalización.
+Cuando una tarea involucre `customer_id`, consulta **`docs/CONTRATO_IDENTIFICADOR_CLIENTE.md`**: define los criterios de negocio que el código por sí solo no revela.
 
-No hagas commit.
+Inspecciona el código y las pruebas, aplica un cambio mínimo, ejecuta las pruebas y revisa `git diff`. No hagas commit ni push.

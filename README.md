@@ -2,33 +2,34 @@
 
 **De Ingenieros a Investigadores: cómo la IA está redefiniendo el futuro de los datos y el desarrollo de software.**
 
-Dos experimentos reproducibles, con preguntas de investigación, instrucciones, evidencias y conclusiones.
+Estos dos experimentos están organizados como guías que pueden reproducirse con pasos, pruebas y conclusiones.
 
-## [Experimento 01: el valor del contexto de ingeniería](experiments/01-ai-engineering-harness/README.md)
+## [Experimento 01: el valor de un contexto de ingeniería](experiments/01-ai-engineering-harness/README.md)
 
-**Pregunta:** ¿qué cambia cuando pedimos a Claude Web que corrija un fragmento de código pegado en un chat, frente a pedir a Claude Code que corrija la misma función dentro de un repositorio con estándares, requisitos y pruebas existentes?
+**Pregunta:** ¿cómo cambia una corrección de código cuando el agente puede consultar estándares y un contrato de negocio que no están en el fragmento pegado a un chat?
 
-- **Claude Web:** recibe una función copiada y el problema que queremos corregir.
-- **Claude Code:** recibe la misma tarea y la ruta del archivo Python, y puede consultar el proyecto.
+- **Claude Web:** recibe el código de la función y la tarea.
+- **Claude Code:** recibe la misma tarea funcional, la ruta del archivo y acceso a la documentación y las pruebas del repositorio.
+- **Contrato ficticio:** especifica reglas propias de una empresa y pruebas que detectan su incumplimiento. No se adjunta a Claude Web.
 
-La diferencia se evalúa en lo que cada uno conoce, decide y puede comprobar. No es un benchmark de modelos ni una afirmación de que todo código generado sin contexto romperá sistemas.
+El objetivo es observar el valor del contexto y la validación; no demostrar que un modelo sea universalmente mejor que otro.
 
 [Reproducir Experimento 01](experiments/01-ai-engineering-harness/README.md)
 
-## [Experimento 02: extracción y validación de documentos bancarios](experiments/02-bank-document-to-orion/README.md)
+## [Experimento 02: extracción y validación de estados de cuenta bancarios](experiments/02-bank-document-to-orion/README.md)
 
-**Pregunta:** ¿cómo comprobamos que los datos extraídos de un PDF son lo suficientemente confiables para una operación?
+**Pregunta:** ¿cómo comprobamos si un dato extraído de un PDF es confiable para una operación?
 
-Aplicación Streamlit con PDFs de demostración, rutas TEXT y VISION, extracción, evidencia y validación.
+Aplicación Streamlit con PDFs de demostración, rutas TEXT y VISION, evidencia y validación.
 
 [Reproducir Experimento 02](experiments/02-bank-document-to-orion/README.md)
 
-## Requisitos generales
+## Requisitos
 
-- Windows, PowerShell, Git, Python y VS Code.
-- Experimento 01: Claude Web y Claude Code (Codex como alternativa).
-- Experimento 02: clave válida y facturación de OpenAI API, separada de la suscripción de ChatGPT.
+- Windows con PowerShell, Git, Python y VS Code.
+- Experimento 01: Claude Web y Claude Code desde la terminal.
+- Experimento 02: acceso y facturación activa de OpenAI API, independientes de una suscripción a ChatGPT.
 
-No publiques credenciales, claves API, archivos `.env` ni documentos bancarios privados.
+No publiques claves API, archivos `.env`, credenciales ni documentos privados.
 
-[Guion y comprobaciones para el presentador](PRESENTER_RUNBOOK.md)
+[Guion del presentador](PRESENTER_RUNBOOK.md)

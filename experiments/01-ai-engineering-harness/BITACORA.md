@@ -2,48 +2,55 @@
 
 ## Pregunta
 
-¿Qué cambia entre pedir una corrección sobre un fragmento pegado en Claude Web y trabajar dentro del repositorio con Claude Code?
+¿Permite el contexto documentado de un repositorio identificar y respetar normas que no aparecen en una función de Python aislada?
 
 ## Hipótesis
 
-La integración al repositorio permite consultar reglas, detectar requisitos existentes, ejecutar pruebas y revisar cambios sobre el código real.
+El agente dentro del repositorio puede consultar el contrato de negocio y verificar sus cambios; el cliente web que solo recibe un fragmento no conoce los criterios empresariales específicos.
 
 ## Condiciones
 
 - Fecha:
-- Claude Web (modelo visible):
-- Claude Code (modelo visible):
-- ¿Se enviaron exactamente los prompts incluidos en este repositorio?: Sí / No
-- ¿Claude Web recibió solo el fragmento de código del prompt, sin otros archivos?: Sí / No
-- ¿Claude Code inició nueva sesión en el repo temporal limpio?: Sí / No
-- ¿Se suministraron aclaraciones adicionales durante la prueba?: Sí / No
-- Observaciones:
+- Modelo Claude Web:
+- Modelo Claude Code:
+- ¿Se usaron los dos prompts documentados, sin modificaciones?: Sí / No
+- ¿Claude Web estaba en una conversación nueva sin archivos adjuntos?: Sí / No
+- ¿Claude Code inició una sesión nueva con la línea base actualizada?: Sí / No
+- ¿Se dieron aclaraciones o pistas adicionales?: Sí / No
+- Desviaciones:
 
-## Resultados
+## Evidencia por condición
 
-| Evidencia | Claude Web | Claude Code |
+| Observación | Claude Web | Claude Code |
 | --- | --- | --- |
-| ¿Qué información recibió al comenzar? | Función pegada | Archivo Python local |
-| ¿Consultó o solicitó criterios faltantes? | | |
-| ¿Qué supuso sobre customer_id válido? | | |
-| ¿Qué solución propuso o aplicó? | | |
-| ¿Consultó código existente y reglas? | | |
-| ¿Agregó pruebas? | | |
+| ¿Qué información tuvo disponible? | Código pegado | Repositorio completo |
+| ¿Preguntó por reglas de negocio? | | |
+| ¿Qué supuso sobre identificadores válidos? | | |
+| ¿Consultó el contrato empresarial? | No disponible | |
+| ¿Qué propuso o modificó? | | |
 | ¿Ejecutó pruebas? ¿Dónde? | | |
-| ¿Qué archivos locales cambiaron? | | |
-| ¿Existe diff verificable contra Git local? | | |
-| ¿Cuánta intervención humana fue necesaria? | | |
+| ¿Probó formatos específicos y el ID reservado? | No se informaron en el prompt | |
+| ¿Revisó un diff del Git local? | | |
+| ¿Qué intervención humana hizo falta? | | |
 
-## Verificación de Claude Code
+## Verificación independiente del proyecto
 
-- Línea base: ____ PASS y ____ FAIL.
-- Resultado posterior: ____ PASS y ____ FAIL.
+- Línea base esperada: 8 PASS y 3 FAIL (11 pruebas).
+- Resultado después del agente: ____ PASS y ____ FAIL.
 - git diff --check: PASS / FAIL.
-- ¿Se conservaron orden, firma y entradas?: Sí / No / No verificado.
-- ¿Se aplicó el criterio de customer_id del repositorio?: Sí / No / No verificado.
-- ¿Se hicieron commits o pushes?: Sí / No.
-- Capturas o salidas relevantes:
+- ¿La solución respeta docs/CONTRATO_IDENTIFICADOR_CLIENTE.md?: Sí / No / No comprobado.
+- ¿Se preservan firma, orden, datos de entrada y montos cero?: Sí / No / No comprobado.
+- ¿Se hizo commit de la solución?: Sí / No.
+- Evidencia o capturas:
+
+## Interpretación
+
+1. ¿Claude Web pidió las reglas que no recibió o las supuso?
+2. ¿Claude Code encontró y utilizó la documentación del negocio antes de editar?
+3. ¿Qué pruebas habrían quedado fuera de una solución basada únicamente en el fragmento pegado?
+4. ¿Cuál es la diferencia entre una función plausible y un cambio verificable en un proyecto?
+5. ¿Qué conclusiones no se pueden extraer de una sola ejecución?
 
 ## Conclusión
 
-Separa **capacidad de generar código**, **acceso al contexto del proyecto** y **evidencia de verificación**. No afirmes que el cliente web falló solo porque pidió aclaraciones, ni que su solución habría roto un sistema real sin haberla probado.
+Atribuye las diferencias al contexto y las herramientas disponibles **solo en la medida en que las observaciones lo respalden**. No afirmes que el cliente web necesariamente falló sin haber probado su solución contra el contrato.

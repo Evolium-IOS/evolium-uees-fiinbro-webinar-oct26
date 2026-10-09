@@ -1,34 +1,34 @@
 # Experimento 01: de pegar código a trabajar dentro de un proyecto
 
-**Objetivo:** recrear dos formas comunes de usar una IA para corregir una función y analizar el valor del contexto de ingeniería.
+**Objetivo:** comparar una corrección sugerida a partir de un fragmento de código con una corrección realizada dentro de un repositorio que contiene reglas de negocio y pruebas.
 
 ## 1. Pregunta de investigación
 
-**¿Qué cambia cuando una IA recibe un fragmento de código pegado en un chat, frente a cuando trabaja directamente en el repositorio donde existen reglas, requisitos y pruebas?**
+**¿Qué cambia al pedir a una IA que corrija código aislado, frente a permitirle trabajar en un proyecto donde los requisitos empresariales ya están documentados?**
 
 ## 2. Hipótesis
 
-**Cuando el agente tiene acceso al proyecto, puede encontrar los criterios existentes, modificar la implementación real y comprobar la compatibilidad con pruebas y Git. Con solo un fragmento de código, el asistente web puede producir una solución plausible, pero tendrá que inferir o solicitar las reglas que no recibió.**
+**Un agente que consulta las normas del repositorio puede detectar criterios empresariales que no aparecen en el fragmento de código y comprobarlos mediante pruebas. Un cliente web sin esos documentos no puede conocer de manera fiable esas reglas específicas, salvo que las pregunte, las reciba o las adivine.**
 
-El resultado no está garantizado. Un cliente web también puede detectar la falta de contexto y pedir aclaraciones, lo cual sería un comportamiento correcto.
+Este experimento observa el **efecto del contexto de trabajo**, no la superioridad general de un modelo sobre otro.
 
-## 3. Dos condiciones de trabajo
+## 3. Condiciones
 
-| Aspecto | Claude Web | Claude Code en VS Code |
+| Condición | Claude Web | Claude Code |
 | --- | --- | --- |
-| Problema solicitado | Corregir el filtro de customer_id | El mismo |
-| Código disponible | Fragmento de la función pegado en el chat | Código real en src/records.py |
-| Información adicional | Ningún archivo ni instrucciones adjuntas | Repositorio con NEXT_TASK.md, AGENTS.md, CLAUDE.md y pruebas |
-| Acciones posibles | Proponer código y pruebas; quizá usar herramientas aisladas | Editar archivos reales, ejecutar pruebas locales y consultar Git |
-| Verificación | Depende del entorno del cliente; registrar qué hizo | Se confirma luego con comandos independientes |
+| Problema | Corregir el filtro de customer_id | El mismo |
+| Entrada de código | Función pegada en el mensaje | Ruta del archivo src/records.py |
+| Requisitos internos | No se entregan | Disponibles en docs/ y archivos de instrucciones |
+| Pruebas existentes | No se entregan | Disponibles en tests/ |
+| Resultado | Propuesta y posible prueba aislada | Modificación y verificación sobre el Git local |
 
-**Control metodológico:** la *tarea funcional* es equivalente, pero los mensajes no son textualmente idénticos y el contexto accesible tampoco. Esa diferencia reproduce dos flujos de trabajo habituales. No atribuyas cualquier diferencia a la capacidad intrínseca del modelo.
+Los prompts son **funcionalmente equivalentes, pero no idénticos en palabras**. La diferencia entre la información disponible es deliberada.
 
 ## 4. Preparar el repositorio
 
-Requisitos: PowerShell, Git, Python 3, VS Code, [Claude Web](https://claude.ai/) y Claude Code CLI.
+Requisitos: PowerShell, Git, Python 3, VS Code, [Claude Web](https://claude.ai/) y Claude Code desde la terminal.
 
-Si no has clonado el repositorio principal:
+Si es la primera vez:
 
 ~~~powershell
 New-Item -ItemType Directory -Force -Path C:\Evolium | Out-Null
@@ -36,30 +36,48 @@ cd C:\Evolium
 git clone https://github.com/Evolium-IOS/evolium-uees-fiinbro-webinar-oct26.git
 ~~~
 
-Si ya está clonado y no hay cambios locales pendientes:
+Si ya está clonado:
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26
 git pull --ff-only
 ~~~
 
-## 5. Crear o restaurar la copia de práctica
+Si Git indica que hay cambios locales que se sobrescribirían, revisa esos cambios antes de actualizar; no borres el proyecto para resolverlo.
 
-Primera vez:
+## 5. Preparar el repositorio de práctica
+
+**Primera vez**, sin carpeta de práctica anterior:
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
 .\scripts\prepare-demo.ps1
 ~~~
 
-Si ya existe la carpeta C:\Evolium\webinar-experiment-01-live:
+**Si ya lo habías creado con una versión anterior**, actualiza su línea base:
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
-.\scripts\reset-demo.ps1
+.\scripts\reset-demo.ps1 -ActualizarPlantilla
 ~~~
 
-**Precaución:** el reset descarta todos los cambios y archivos no versionados dentro del repositorio temporal. No afecta al repositorio principal.
+**Advertencia:** la segunda instrucción descarta los cambios del ejercicio en C:\Evolium\webinar-experiment-01-live, elimina sus archivos no versionados y crea un nuevo commit de preparación con el contenido de la plantilla. No hace push ni modifica el repositorio principal.
+
+El proyecto temporal incluye:
+
+~~~text
+AGENTS.md
+CLAUDE.md
+NEXT_TASK.md
+docs/
+  CONTRATO_IDENTIFICADOR_CLIENTE.md
+src/
+  records.py
+tests/
+  test_records.py
+~~~
+
+Los documentos de docs/ contienen criterios de negocio específicos de una empresa ficticia. **No los adjuntaremos a Claude Web.**
 
 ## 6. Comprobar la línea base
 
@@ -70,22 +88,25 @@ git log -1 --oneline
 python -m unittest discover -s tests -v
 ~~~
 
-Resultado esperado: commit **demo: baseline**, con **8 pruebas: 7 pasan y 1 falla intencionalmente** (test_excludes_missing_customer_id). No arregles el código todavía.
+**Resultado esperado con la nueva plantilla:** 11 pruebas, **8 PASS y 3 FAIL intencionales**. Las fallas muestran la ausencia de validación del identificador, formatos de empresa no aceptados y un identificador interno reservado.
 
-## 7. Condición A: Claude Web con código pegado
+Si observas todavía 8 pruebas con 7 PASS y 1 FAIL, tu copia de práctica usa la plantilla antigua: ejecuta el paso 5 con -ActualizarPlantilla.
 
-1. Abre [Claude Web](https://claude.ai/) en una conversación nueva sin proyecto, adjuntos ni repositorios conectados.
-2. Elige la misma familia/versión de modelo que usarás en Claude Code si está disponible.
-3. Abre **[prompts/claude-web.md](prompts/claude-web.md)** y copia **todo el archivo**, incluido el bloque de código Python.
-4. Envía el prompt y conserva la respuesta.
-5. Si el asistente pide más requisitos, **no los proporciones** durante esta ejecución. Registra la pregunta; no es un fallo.
-6. No copies ninguna solución a la carpeta de práctica.
+No arregles el código todavía. No presentes el detalle de la política al cliente web.
 
-Observa si supone qué significa un customer_id válido y si distingue código propuesto de código efectivamente probado.
+## 7. Condición A: Claude Web, código pegado
 
-## 8. Condición B: Claude Code en el proyecto real de práctica
+1. Inicia una conversación **nueva** en [Claude Web](https://claude.ai/).
+2. Selecciona, si está disponible, la misma familia y versión de modelo que usarás en Claude Code.
+3. No selecciones proyectos con contexto, no adjuntes archivos ni conectes el repositorio.
+4. Abre [prompts/claude-web.md](prompts/claude-web.md); copia **todo el contenido**, incluida la función Python.
+5. Envíalo y conserva la respuesta.
+6. Si solicita aclaraciones, regístralas; **no reveles el contrato de negocio**.
+7. No transfieras aún la propuesta a la carpeta de práctica.
 
-Desde PowerShell:
+Observa si Claude Web identifica correctamente que desconoce el formato de identificadores permitido. Si propone una solución, no presupongas que cumple las reglas internas que nunca recibió.
+
+## 8. Condición B: Claude Code en el repositorio
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
@@ -100,23 +121,28 @@ git rev-parse --show-toplevel
 git --no-pager diff -- src/records.py tests/test_records.py
 ~~~
 
-Verifica que el proyecto activo sea **C:\Evolium\webinar-experiment-01-live** y no exista un cambio previo en src/records.py ni tests/test_records.py. En esta carpeta los archivos de reglas y pruebas ya están disponibles.
+El directorio debe ser C:\Evolium\webinar-experiment-01-live. El diff inicial debe estar vacío.
 
-Inicia una **sesión nueva** del agente desde esa misma terminal:
+Inicia **una sesión nueva**:
 
 ~~~powershell
 claude
 ~~~
 
-Abre **[prompts/claude-code.md](prompts/claude-code.md)** y copia **todo el archivo**. Es la misma petición, pero en lugar de pegar el código indica al agente que lea src/records.py.
+Abre [prompts/claude-code.md](prompts/claude-code.md), copia **todo el contenido** y envíalo. No pegues manualmente las reglas de negocio.
 
-No añadas criterios al prompt. Observa si Claude Code descubre las instrucciones persistentes, NEXT_TASK.md y los tests, y si revisa su trabajo con Git.
+Observa si el agente consulta:
 
-Autoriza lectura, edición de los archivos de esta práctica y pruebas. **No autorices commit ni push.**
+- AGENTS.md y CLAUDE.md;
+- NEXT_TASK.md;
+- docs/CONTRATO_IDENTIFICADOR_CLIENTE.md;
+- src/records.py y tests/test_records.py.
 
-## 9. Verificación independiente
+Autoriza lectura, cambios en los archivos del ejercicio y pruebas. **No permitas commits ni pushes**.
 
-Cuando termine el agente, sal con /exit y ejecuta:
+## 9. Verificar independientemente
+
+Cuando Claude Code termine, sal con /exit y ejecuta:
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
@@ -127,35 +153,27 @@ git status --short
 git log -1 --oneline
 ~~~
 
-Compara el resultado con los criterios existentes del proyecto:
-- customer_id debe existir, ser string y no quedar vacío después de strip.
-- La función mantiene firma pública, orden y comportamiento de los registros válidos.
-- No altera los diccionarios originales.
-- El diff es acotado y las pruebas pasan.
-- No se ha hecho commit.
+El resultado correcto es **todas las pruebas PASS**, con cambios acotados a la tarea. El número final puede ser mayor de 11 si el agente añade pruebas.
 
-Los avisos LF/CRLF de Windows no son por sí mismos errores. Las carpetas __pycache__ son artefactos Python no versionados.
+Solo ahora abre el contrato de negocio y revisa si se cumplieron sus criterios. Si Claude Code no lo consultó o falló, eso también es un resultado válido que debes registrar.
 
-## 10. Interpretar el resultado
+## 10. Conclusión
 
-Registra en la [bitácora](BITACORA.md):
-1. ¿Qué criterio decidió o preguntó Claude Web cuando no tenía requisitos internos?
-2. ¿Qué reglas consultó realmente Claude Code y cómo afectaron a su solución?
-3. ¿Qué pruebas se ejecutaron y en qué entorno?
-4. ¿Qué cambios y evidencias se pueden auditar?
-5. ¿Qué no demuestra una sola ejecución?
+Completa la [bitácora](BITACORA.md). Compara **suposiciones**, **normas consultadas**, **archivos realmente modificados** y **pruebas realmente ejecutadas**.
 
-**No se puede concluir** que una propuesta de Claude Web hubiera roto el proyecto sin aplicarla y probarla sobre una copia comparable. La demostración explora la importancia de la documentación, las pruebas y la integración con sistemas existentes; no demuestra superioridad universal.
+**Conclusión posible:** los estándares del proyecto y la verificación automatizada permiten evaluar la compatibilidad de una solución con reglas internas no visibles en un fragmento aislado.
 
-## 11. Restaurar para una nueva demostración
+**Límite:** este experimento no demuestra que Claude Web sea incapaz de programar ni que su propuesta rompería el sistema. Para medir esa afirmación, tendríamos que aplicar y evaluar su propuesta en una copia independiente de la misma línea base.
 
-**Advertencia:** elimina modificaciones y archivos no versionados de la carpeta temporal de práctica.
+## 11. Restaurar para repetir la presentación
+
+**Advertencia:** este script descarta los cambios locales del ejercicio.
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
 .\scripts\reset-demo.ps1
 ~~~
 
-El proyecto quedará en el baseline de 7 PASS y 1 FAIL intencional.
+El estado vuelve a la plantilla empresarial con **8 PASS y 3 FAIL intencionales**.
 
 [Prompt Claude Web](prompts/claude-web.md) | [Prompt Claude Code](prompts/claude-code.md) | [Bitácora](BITACORA.md) | [Experimento 02](../02-bank-document-to-orion/README.md)

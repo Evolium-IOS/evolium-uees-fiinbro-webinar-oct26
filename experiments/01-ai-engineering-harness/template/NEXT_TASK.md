@@ -1,28 +1,17 @@
-# Tarea
+# Tarea abierta: selección de registros procesables
 
-Actualiza `select_processable_records` para que los registros sin un `customer_id` válido no lleguen al resultado.
+La función `select_processable_records` puede admitir registros que no deben procesarse.
 
-## Criterios de aceptación
+## Requisitos del proyecto
 
-Un `customer_id` válido:
-- existe;
-- es un string;
-- no queda vacío después de remover espacios al inicio/final.
+- Los criterios completos de validez de `customer_id` y sus excepciones están en **`docs/CONTRATO_IDENTIFICADOR_CLIENTE.md`**.
+- No es suficiente suponer que todo identificador no vacío es válido.
+- Conserva firma pública, orden, objetos de entrada y comportamiento correcto existente.
+- Usa solamente la biblioteca estándar de Python.
 
-Conserva:
-- la firma pública;
-- el comportamiento para registros `ready` válidos;
-- el orden de entrada;
-- los objetos de entrada sin mutarlos.
+## Criterios de finalización
 
-Ejecuta:
-
-```text
-python -m unittest discover -s tests -v
-```
-
-Todas las pruebas deben pasar.
-
-Revisa `git diff` antes de declarar éxito.
-
-No hagas commit.
+1. El comportamiento debe cumplir el contrato de negocio.
+2. Las pruebas existentes y las nuevas pruebas de regresión deben pasar.
+3. Ejecuta `python -m unittest discover -s tests -v` y revisa `git diff`.
+4. No hagas commit ni push.

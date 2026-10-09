@@ -1,12 +1,12 @@
-# Instrucciones del repositorio
+# Estándares del repositorio
 
-- Conserva la firma pública de la función.
+- Antes de modificar validaciones de negocio, identifica y consulta la documentación de `docs/`.
+- La política de identificadores de cliente se define en `docs/CONTRATO_IDENTIFICADOR_CLIENTE.md`; no inventes el formato ni excepciones.
+- Conserva la firma pública, el orden y el comportamiento existente de los registros válidos.
 - Usa solamente la biblioteca estándar de Python.
-- No mutes los registros de entrada.
-- Conserva el orden de los registros devueltos.
-- Mantén los cambios limitados al comportamiento solicitado.
-- No elimines ni debilites pruebas no relacionadas.
-- Ejecuta:
-  `python -m unittest discover -s tests -v`
+- No modifiques los diccionarios de entrada ni normalices sus valores.
+- Limita los cambios al comportamiento solicitado.
+- No elimines ni debilites pruebas existentes.
+- Ejecuta `python -m unittest discover -s tests -v`.
 - Revisa `git diff` antes de declarar éxito.
-- No hagas commit salvo instrucción explícita.
+- No hagas commit ni push salvo autorización explícita.

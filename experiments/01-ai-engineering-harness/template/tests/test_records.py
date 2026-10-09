@@ -45,5 +45,26 @@ class SelectProcessableRecordsTests(unittest.TestCase):
         self.assertEqual(select_processable_records(rows), [])
 
 
+    def test_excludes_invalid_company_customer_id_formats(self):
+        rows = [
+            {"customer_id": "c-001", "status": "ready"},
+            {"customer_id": "C-12", "status": "ready"},
+            {"customer_id": "C-1234", "status": "ready"},
+            {"customer_id": "C-ABC", "status": "ready"},
+            {"customer_id": "X-001", "status": "ready"},
+            {"customer_id": "C-0 1", "status": "ready"},
+            {"customer_id": 123, "status": "ready"},
+        ]
+        self.assertEqual(select_processable_records(rows), [])
+
+    def test_excludes_reserved_internal_customer_id(self):
+        rows = [{"customer_id": "C-000", "status": "ready"}]
+        self.assertEqual(select_processable_records(rows), [])
+
+    def test_accepts_padded_valid_customer_id_without_normalizing(self):
+        rows = [{"customer_id": "  C-027  ", "status": "ready"}]
+        self.assertEqual(select_processable_records(rows), rows)
+
+
 if __name__ == "__main__":
     unittest.main()

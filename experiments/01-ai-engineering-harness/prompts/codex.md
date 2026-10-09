@@ -1,4 +1,4 @@
-# Codex prompt
+# Prompt para Codex
 
 ```text
 Implementa NEXT_TASK.md.

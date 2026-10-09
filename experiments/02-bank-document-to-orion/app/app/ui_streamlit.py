@@ -5,8 +5,7 @@ import pandas as pd
 import streamlit as st
 import uuid
 
-
-# This ensure project root is on PYTHONPATH
+# Asegura que la raíz del proyecto esté disponible en PYTHONPATH.
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -14,7 +13,6 @@ if PROJECT_ROOT not in sys.path:
 from app.pdf_router import route_pdf
 from app.orchestrator_text import run_text_pipeline, summarize_report
 from app.orchestrator_vision import run_vision_pipeline
-
 
 
 def save_uploaded_file(uploaded_file) -> str:
@@ -30,36 +28,33 @@ def save_uploaded_file(uploaded_file) -> str:
 
 
 def main():
-    st.title("Agentic AI Workflow for Data Extraction From Bank Statements")
+    st.title("Extracción y validación de datos desde estados de cuenta")
     st.info(
-    "🧪 **UI Sample Only**\n\n"
-    "This public demo showcases the **agentic workflow and UI behavior**.\n\n"
-    "❗ Running extraction requires a valid OpenAI API key, which is **not configured** "
-    "in this hosted environment.\n\n"
-    "To run the full system, clone the repository and configure your `.env` file locally.",
-    icon="ℹ️",
+        "🧪 **Demostración de investigación**\n\n"
+        "Esta interfaz muestra un flujo agéntico de routing, extracción, validación y reparación acotada.\n\n"
+        "Usa únicamente documentos de demostración o información autorizada.",
+        icon="ℹ️",
     )
 
-    uploaded = st.file_uploader("Upload a bank statement PDF", type=["pdf"])
+    uploaded = st.file_uploader("Sube un estado de cuenta en PDF", type=["pdf"])
     bank_choice = st.selectbox(
-        "Please, select a bank",
+        "Selecciona el banco configurado",
         ["Commerce Bank", "SAMPLE"],
     )
 
     if uploaded is None:
-        st.info("Upload a PDF to begin.")
+        st.info("Sube un PDF para comenzar.")
         return
 
     pdf_path = save_uploaded_file(uploaded)
-    st.write("Saved file:", pdf_path)
+    st.write("Archivo guardado localmente:", pdf_path)
 
     router_result = route_pdf(pdf_path)
-    st.subheader("Router decision")
+    st.subheader("Decisión del router")
     st.json(router_result)
 
-    if st.button("Extract and Validate"):
-        with st.spinner("Running extraction + validation..."):
-
+    if st.button("Extraer y validar"):
+        with st.spinner("Ejecutando extracción + validación..."):
             if router_result.get("route") == "TEXT":
                 pipeline = run_text_pipeline
             else:
@@ -74,19 +69,19 @@ def main():
 
         summary = summarize_report(final_report)
 
-        st.subheader("Final table")
+        st.subheader("Tabla final")
         st.dataframe(pd.DataFrame([final_table]))
 
-        st.subheader("Validation summary")
+        st.subheader("Resumen de validación")
         st.json(summary)
 
-        st.subheader("Validation report (per field)")
+        st.subheader("Reporte de validación por campo")
         st.dataframe(pd.DataFrame(final_report))
 
-        st.subheader("Raw JSON output")
+        st.subheader("Salida JSON")
         st.code(json.dumps(final_table, indent=2), language="json")
 
-        st.subheader("Run metadata")
+        st.subheader("Metadata de ejecución")
         st.json(meta)
 
 

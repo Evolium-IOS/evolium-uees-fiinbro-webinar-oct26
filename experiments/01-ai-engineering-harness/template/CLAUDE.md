@@ -1,6 +1,7 @@
-# Claude Code Instructions
+# Instrucciones para Claude Code
 
-Read AGENTS.md and NEXT_TASK.md before editing.
-Keep the implementation minimal.
-Run the full test suite and inspect git diff before reporting completion.
-Do not commit.
+Lee `AGENTS.md` y `NEXT_TASK.md` antes de modificar archivos.
+
+La tarea es intencionalmente pequeña. Mantén la implementación mínima, conserva el comportamiento existente, ejecuta todas las pruebas y revisa `git diff` antes de reportar finalización.
+
+No hagas commit.

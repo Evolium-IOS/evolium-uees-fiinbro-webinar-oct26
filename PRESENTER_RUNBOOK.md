@@ -1,35 +1,63 @@
-# Presenter Runbook
+# Guía del Presentador
 
-## Story arc
+## Narrativa general
 
-### Experiment 01 — AI inside the engineering environment
-Question: **What changes when AI works inside the project instead of only receiving pasted context in a chat?**
+La sección práctica responde dos preguntas distintas.
 
-Recommended live pairing: **Claude Desktop → Claude Code**. This keeps the vendor/model family broadly consistent while changing the environment. **Codex is the alternate/fallback harness.**
+### Experimento 01 — ¿Qué cambia cuando la IA trabaja dentro del entorno de ingeniería?
 
-Sequence:
-1. Use the direct-client prompt in a fresh desktop chat.
-2. Point out that only explicitly pasted context is available.
-3. Open the prepared demo workspace in VS Code.
-4. Show NEXT_TASK.md, AGENTS.md / CLAUDE.md, source, and tests.
-5. Run the baseline tests: seven pass, one intentionally fails.
-6. Run one coding harness live: Claude Code OR Codex.
-7. Show passing tests and git diff.
-8. Do not commit live.
+Compararemos el mismo problema en dos contextos:
+1. cliente conversacional;
+2. agente de código dentro de un repositorio con reglas, pruebas, Git y terminal.
 
-Key line:
+Para una comparación metodológicamente limpia, la demostración principal recomendada es:
+
+**Claude Desktop → Claude Code**
+
+Así cambia principalmente el entorno de trabajo, no la familia de producto. Codex queda como alternativa o respaldo.
+
+### Secuencia en vivo — Experimento 01
+1. Abrir el cliente conversacional con una conversación nueva.
+2. Usar el prompt preparado.
+3. Señalar que el cliente solo conoce el contexto que le proporcionamos.
+4. Cambiar a VS Code.
+5. Mostrar `NEXT_TASK.md`, `AGENTS.md` / `CLAUDE.md`, código y pruebas.
+6. Ejecutar la línea base: 7 pruebas pasan y 1 falla intencionalmente.
+7. Ejecutar **un solo** harness en vivo: Claude Code o Codex.
+8. Mostrar que las pruebas pasan.
+9. Mostrar `git diff`.
+10. No hacer commit durante la demo.
+
+Frase clave:
+
 > No es que el chat no pueda resolverlo. La diferencia es que aquí el contexto, las reglas, el código, las pruebas y la evidencia ya forman parte del entorno de trabajo.
 
-Do not claim harnesses always consume fewer tokens. Say:
+No afirmar que un harness siempre usa menos tokens. Explicar:
+
 > La eficiencia viene de reducir contexto repetido, reexplicación y trabajo que no podemos verificar.
 
-### Experiment 02 — Research to operational system
-1. Open the bank extractor UI, already running locally.
-2. Use only a sanitized demo PDF.
-3. Ask what fields the audience expects.
-4. Run extraction and show the actual structured output.
-5. Show validation/repair behavior only if supported by the uploaded source.
-6. Return to the presentation.
-7. Bridge: **“Extraer el dato era solo el comienzo.”**
-8. Explain the larger operational questions: rules, context, review, workflow, decisions, governance.
-9. Transition to ORION without claiming the extractor literally became ORION.
+---
+
+### Experimento 02 — ¿Cómo una investigación técnica revela un problema operativo?
+
+1. Tener la UI del extractor ya ejecutándose en localhost.
+2. Usar únicamente un PDF de demostración seguro.
+3. Preguntar al público qué campos espera obtener.
+4. Ejecutar la extracción.
+5. Mostrar el resultado estructurado.
+6. Mostrar validación y reparación únicamente como existen realmente en el proyecto.
+7. Volver a la presentación.
+8. Hacer la transición: **“Extraer el dato era solo el comienzo.”**
+9. Introducir reglas, contexto, revisión humana, flujo, decisiones y gobernanza.
+10. Conectar con ORION sin afirmar que el extractor literalmente “se convirtió” en ORION.
+
+Frase de transición recomendada:
+
+> Este experimento resolvía una pregunta técnica. Pero al intentar llevar ese dato a una operación real aparecieron preguntas mucho más grandes.
+
+## Tiempo objetivo
+
+- Experimento 01: 4–5 min.
+- Explicación del stack: 1–2 min.
+- Experimento 02: 4–5 min.
+- Transición a ORION: ~1 min.

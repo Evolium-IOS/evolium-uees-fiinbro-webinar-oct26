@@ -1,250 +1,148 @@
-# Installation & Reproducibility Guide
+# Guía de instalación y reproducción
 
-This document describes how to install, configure, and run the **Agentic Bank Statement Extraction System** locally in order to reproduce both **TEXT** and **VISION (OCR)** workflows.
+Esta guía explica cómo ejecutar localmente el sistema de extracción de estados de cuenta y reproducir las rutas `TEXT` y `VISION`.
 
-The instructions below assume no prior knowledge of the codebase.
+## 1. Stack
 
----
+- Python 3.10+
+- Streamlit
+- pdfplumber
+- PyMuPDF (`fitz`)
+- OpenAI API
+- pandas
+- JSON
 
-## 1. Tech Stack
+## 2. Flujo
 
-- **Language / Runtime:** Python 3.10+
-- **UI:** Streamlit
-- **PDF Text Extraction:** pdfplumber
-- **PDF → Image Rendering (OCR path):** PyMuPDF (`fitz`)
-- **LLM / Vision OCR:** OpenAI Responses API (text + vision-capable model)
-- **Data Handling:** JSON contracts, pandas (UI display)
-
----
-
-## 2. System Architecture (High-Level)
-
-The system preserves a strict separation of concerns:
-
-- **Router → Orchestrator → Utility → UI**
-- Validation and repair loops are core to both pipelines
-- Bank name is UI-configured and protected from auto-modification
-
-Each run produces:
-- A final structured table (dictionary)
-- A full per-field validation report
-- Run metadata (rounds used, best round, pass rate, OCR details if applicable)
-
-Refer to the architecture diagram in `assets/images/architecture.png` for a visual overview.
-
----
-
-## 3. Prerequisites
-
-Ensure the following are available on your system:
-
-- Python **3.10 or newer** available on PATH
-- Git (optional, if cloning the repository)
-- An **OpenAI API key** with access to the configured models  
-  - You must have an active OpenAI account
-  - A minimum of **$5.00 USD credit** is recommended for OCR testing
-
----
-
-## 4. Get the Code
-
-#### Option A — Clone the Repository
-
-```bash
-git clone https://github.com/angomezu/agentic-bank-statement-extractor.git
-cd agentic-bank-statement-extractor
+```text
+Router → Orquestador → Utilidades → UI
 ```
 
-#### Option B — Download ZIP
+Ambas rutas incluyen validación y reparación acotada.
 
-- Download the repository as a ZIP
-- Unzip it locally
+Cada ejecución devuelve:
+- tabla estructurada;
+- reporte de validación por campo;
+- metadata de ejecución.
 
-```bash
-cd into the extracted project directory
-```
+## 3. Requisitos
 
-## 5. Create and Activate a Virtual Environment
+- Python 3.10 o superior.
+- Acceso a terminal/PowerShell.
+- Una `OPENAI_API_KEY` válida para los modelos configurados.
 
-- Create a Python virtual environment at the project root:
+## 4. Crear entorno virtual
 
-```bash
+Desde `experiments/02-bank-document-to-orion/app`:
+
+```powershell
 python -m venv .venv
-```
-- Activate it:
-
-macOS / Linux
-
-```bash
-source .venv/bin/activate
-```
-
-Windows (PowerShell)
-
-```bash
 .venv\Scripts\Activate.ps1
-```
-
-- Verify activation:
-
-```bash
-python --version
-```
----
-## 6. Install Dependencies
-
-Upgrade pip and install required packages:
-
-```bash
-pip install --upgrade pip
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-#### Notes
+## 5. Configurar variables
 
-- The TEXT pipeline requires pdfplumber
-- The VISION pipeline requires PyMuPDF (fitz) for PDF-to-image rendering
-- All required dependencies are declared in requirements.txt
+Copiar:
 
----
-## 7. Configure Environment Variables
-
-This variables will determine the speed, prediction accuracy, and **cost**.
-
-- Create a .env file at the project root (same level as requirements.txt).
-
-```bash
-OPENAI_API_KEY=YOUR_KEY_HERE
+```text
+.env.example
 ```
 
-- Text pipeline model (extraction / validation / repair)
+a:
 
-```bash
+```text
+.env
+```
+
+Completar al menos:
+
+```text
+OPENAI_API_KEY=TU_CLAVE
+```
+
+Configuración disponible:
+
+```text
 LLM_MODEL=gpt-4.1-mini
-```
-
-- Vision model for OCR (defaults to LLM_MODEL if omitted)
-
-```bash
 VISION_MODEL=gpt-4.1-mini
-```
-
-- OCR rendering controls
-
-```bash
 OCR_DPI=200
 OCR_MAX_PAGES=10
 ```
 
-#### Configuration Behavior
+## 6. Ejecutar la UI
 
-- LLM_MODEL: Drives schema extraction, validation, and repair logic.
-
-- VISION_MODEL
-  - Drives OCR for scanned PDFs.
-  - If omitted, the system falls back to LLM_MODEL.
-
-- OCR_DPI and OCR_MAX_PAGES: Control OCR quality vs. speed and cost.
-
----
-## 8. Run the Streamlit UI (Local)
-
-- Start the application:
-
-```bash
+```powershell
 streamlit run app/ui_streamlit.py
 ```
 
-- Open the local URL printed in the terminal (typically):
+Normalmente:
 
-```bash
+```text
 http://localhost:8501
 ```
----
 
-## 9. Reproduce TEXT vs VISION Workflows
+## 7. Ruta TEXT
 
-#### 9.1 TEXT Run (Machine-Readable PDF)
+Usar:
 
-#### IMPORTANT: 
+`assets/bank_statements/statement_sample1.pdf`
 
-- This workflow version has a deterministc approach; in the essence that the fields being extracted are determined by the two samples included in this repository.
-- The reproduction of this system assumes you will use the same files avaiable here: [Bank Statements](assets/bank_statements)
-- The LLM does not take into account any other formats and may or may not produce a bad prediction and result if a different set of PDFs is being provided.
+Esperar:
 
-#### To begin:
-
-- Upload a machine-readable bank statement PDF
-- Select the Configured bank name from the dropdown
-- Confirm the router decision shows:
-
-```bash
+```text
 route = TEXT
 ```
 
-- Click Extract and Validate
-  - Verify outputs:
-    - Final structured table is populated
-    - Validation summary and per-field report are visible
-    - Pass rate and run metadata are shown
+Luego presionar **Extraer y validar**.
 
-##### 9.2 VISION Run (Scanned / Image PDF)
+Revisar:
+- tabla final;
+- resumen de validación;
+- reporte por campo;
+- JSON;
+- metadata.
 
-- Upload a scanned or image-based statement (e.g. statement_ocr.pdf)
-- Select the Configured bank name
-- Confirm the router decision shows:
+## 8. Ruta VISION
 
-```bash
+Usar:
+
+`assets/bank_statements/statement_ocr.pdf`
+
+Esperar:
+
+```text
 route = VISION
 ```
 
-- Click Extract and Validate
-  - Verify outputs:
-    - OCR-specific schema fields are populated
-    - Validation report includes evidence quotes
+La ruta:
+1. renderiza páginas con PyMuPDF;
+2. ejecuta OCR mediante el modelo configurado;
+3. extrae campos;
+4. valida;
+5. repara de forma acotada si es necesario.
 
-- Metadata includes:
-  - ocr_pages_used
-  - ocr_dpi
-  - vision_model
+## 9. Componentes reales del proyecto
 
----
+### Router — `app/pdf_router.py`
+Extrae texto con `pdfplumber` y usa heurísticas de longitud/cantidad de palabras para decidir TEXT o VISION.
 
-## 10. Agents Overview
+### Orquestador TEXT — `app/orchestrator_text.py`
+Extrae, valida y ejecuta reparación acotada.
 
-#### Router Agent (`app/pdf_router.py`)
-- Inspects PDF content
-- Routes to:
-  - `TEXT` pipeline (machine-readable)
-  - `VISION` pipeline (scanned PDFs)
+### Orquestador VISION — `app/orchestrator_vision.py`
+Renderiza páginas, ejecuta OCR y aplica el mismo patrón general de validación/reparación.
 
-#### TEXT Extraction Agent (`app/orchestrator_text.py`)
-- Uses `pdfplumber`
-- Extracts full schema from text
-- Validates and repairs until pass threshold
+### Validador/utilidades — `app/utility_pdf.py`
+Contiene extracción de PDF, llamadas al modelo, validación, evidencia y utilidades OCR.
 
-#### VISION Extraction Agent (`app/orchestrator_vision.py`)
-- Renders pages to images via PyMuPDF
-- Performs OCR using a vision-capable LLM
-- Extracts OCR-specific schema
-- Shares the same validation/repair loop
+### UI — `app/ui_streamlit.py`
+Permite subir PDF, seleccionar banco, observar el routing y ejecutar extracción/validación.
 
-#### Validator Agent (`app/utility_pdf.py`)
-- Verifies each field against source text
-- Produces evidence quotes and confidence
-- Outputs PASS / FAIL / UNCERTAIN per field
+## 10. Campos — TEXT
 
-#### Repair Agent (loop logic in orchestrators)
-- Applies deterministic fixes
-- Re-extracts only failed fields
-- Tracks best round by pass rate
-
----
-
-## 11. Extracted Schemas
-
-#### TEXT PDFs
-- bank_name (UI-configured)
+- bank_name
 - customer_name
 - customer_address
 - account_number
@@ -257,8 +155,9 @@ route = VISION
 - total_checks_paid
 - ending_balance
 
-#### VISION / OCR PDFs
-- bank_name (UI-configured)
+## 11. Campos — VISION
+
+- bank_name
 - account_number
 - statement_date
 - beginning_balance
@@ -267,72 +166,43 @@ route = VISION
 - total_service_charges_fees
 - ending_balance
 
----
+## 12. Salidas
 
-## 12. Outputs
+### Tabla final
+Diccionario estructurado.
 
-Each run returns:
+### Reporte de validación
+Por campo:
+- status;
+- extracted_value;
+- evidence_quote;
+- suggested_value;
+- confidence;
+- reason.
 
-- **Final Table**  
-  Structured dictionary (exportable to CSV / Excel)
+### Metadata
+- rounds_used;
+- best_round;
+- final_pass_rate;
+- parámetros OCR cuando aplica.
 
-- **Validation Report**  
-  Per-field:
-  - status
-  - extracted value
-  - evidence quote
-  - suggested value
-  - confidence
-  - reason
+## 13. Artefactos
 
-- **Run Metadata**
-  - rounds_used
-  - best_round
-  - final_pass_rate
-  - OCR parameters (if applicable)
- 
+Los PDFs subidos se guardan localmente en:
 
-- **Uploaded PDFs are saved under:**
-
-```bash
+```text
 artifacts/
 ```
 
-- VISION runs additionally write rendered page images to:
+Las imágenes renderizadas para VISION se guardan en:
 
-```bash
+```text
 artifacts/rendered_pages/
 ```
 
-- Each run returns three primary objects internally:
-  - final_table — structured extraction result (dict)
-  - final_report — per-field validation report
-  - meta — run metadata (rounds, pass rate, OCR details)
+## 14. Notas de reproducción
 
-
----
-
-## 13. Troubleshooting (Common Issues)
-
-- Missing API key
-  - Ensure OPENAI_API_KEY is set correctly in .env.
-
-- VISION runs are slow or expensive
-  - Reduce OCR_MAX_PAGES and/or OCR_DPI.
-
-- Import or module errors
-  - Confirm:
-    - Virtual environment is activated
-    - pip install -r requirements.txt completed successfully
-    - Unexpected bank name behavior
-    - Bank name must be selected in the UI.
-    - It is intentionally never inferred from PDF content.
----
-
-## 14. Reproducibility Notes
-
-- Validation and repair loops are bounded (no infinite retries)
-- Best round is selected by highest validation pass rate
-- Bank name invariants are enforced deterministically
-
-The system is designed to be extended to batch processing and API deployment without architectural changes
+- La reparación tiene un número máximo de rondas.
+- La mejor ronda se selecciona por tasa de aprobación.
+- El nombre del banco proviene de la selección de UI y se protege determinísticamente.
+- Los formatos de demostración incluidos son la base de los esquemas actuales.

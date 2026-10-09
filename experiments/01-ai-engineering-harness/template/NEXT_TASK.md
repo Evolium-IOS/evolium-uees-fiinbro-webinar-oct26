@@ -1,21 +1,28 @@
-# Task
+# Tarea
 
-Update `select_processable_records` so records without a valid `customer_id` do not reach the returned result.
+Actualiza `select_processable_records` para que los registros sin un `customer_id` válido no lleguen al resultado.
 
-A valid customer_id:
-- exists;
-- is a string;
-- is not empty after trimming whitespace.
+## Criterios de aceptación
 
-Preserve:
-- public function signature;
-- behavior for valid ready records;
-- input order;
-- input objects without mutation.
+Un `customer_id` válido:
+- existe;
+- es un string;
+- no queda vacío después de remover espacios al inicio/final.
 
-Run:
-`python -m unittest discover -s tests -v`
+Conserva:
+- la firma pública;
+- el comportamiento para registros `ready` válidos;
+- el orden de entrada;
+- los objetos de entrada sin mutarlos.
 
-All tests must pass.
-Inspect git diff.
-Do not commit.
+Ejecuta:
+
+```text
+python -m unittest discover -s tests -v
+```
+
+Todas las pruebas deben pasar.
+
+Revisa `git diff` antes de declarar éxito.
+
+No hagas commit.

@@ -1,41 +1,55 @@
-# Experiment 01 — AI Engineering Harness
+# Experimento 01 — IA dentro del entorno de ingeniería
 
-## Goal
-Compare the same engineering task in:
-1. a normal conversational client;
-2. a coding agent working inside a scoped repository with persistent instructions, source code, tests, Git, and terminal access.
+## Pregunta
 
-This is **not** a Claude-vs-Codex benchmark.
+**¿Qué cambia cuando la IA trabaja dentro del proyecto y no solamente recibe contexto pegado en un chat?**
 
-## Recommended live comparison
-Use **Claude Desktop → Claude Code** as the primary demonstration. Use Codex as the alternate/fallback harness.
+Comparamos la misma tarea en:
+1. un cliente conversacional;
+2. un agente de código dentro de un repositorio con instrucciones persistentes, código, pruebas, Git y terminal.
 
-## Prepare
-Run:
+Esto **no** es un benchmark Claude vs. Codex.
+
+## Demostración recomendada
+
+Usar **Claude Desktop → Claude Code** como comparación principal.
+
+Codex queda como alternativa o respaldo.
+
+## Preparar el workspace en vivo
+
+Desde PowerShell:
 
 ```powershell
 .\scripts\prepare-demo.ps1
 ```
 
-This creates a standalone local Git repo:
+El script crea un repositorio Git local separado en:
 
 ```text
 C:\Evolium\webinar-experiment-01-live
 ```
 
-Open only that folder in VS Code.
+Abrir únicamente esa carpeta en VS Code.
 
-## Baseline
-The tiny Python project has eight tests: seven pass and one intentionally fails because a ready record without a valid customer_id reaches the output.
+## Línea base
 
-Run:
+El proyecto contiene una función pequeña de Python para procesar registros.
+
+Hay 8 pruebas:
+- 7 pasan;
+- 1 falla intencionalmente porque un registro `ready` sin `customer_id` válido todavía llega al resultado.
+
+Ejecutar:
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
 
-Reset after rehearsal with:
+## Restaurar después de un ensayo
 
 ```powershell
 .\scripts\reset-demo.ps1
 ```
+
+El script verifica el Git root exacto antes de hacer reset.

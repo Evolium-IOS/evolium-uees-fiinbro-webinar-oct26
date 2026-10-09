@@ -1,173 +1,110 @@
-# Self-Validating Agentic System for Bank Statements Data Extraction
+# Sistema Agéntico Auto-validado para Extracción de Datos de Estados de Cuenta
 
-<div align="center">
+Este proyecto demuestra un flujo de extracción estructurada desde estados de cuenta bancarios en PDF.
 
-  <!-- Logos row -->
-  <div style="display: flex; justify-content: center;">
-    <img src="assets/images/python_logo.png" height="80" style="margin-right: 24px;" />
-    <img src="assets/images/pymupdf_logo_bg.png" height="80" style="margin-right: 24px;" />
-    <img src="assets/images/openai-white-lockup.png" height="80" style="margin-right: 24px;" />
-    <img src="assets/images/534702.png" height="80" />
-  </div>
+Los documentos pueden llegar como:
+- PDFs con texto legible por máquina;
+- PDFs escaneados basados en imágenes.
 
-  <br>
+En ambos casos, el objetivo no es solamente extraer campos. El sistema intenta **validar cada campo contra evidencia**, marcar resultados como `PASS`, `FAIL` o `UNCERTAIN`, y realizar una reparación acotada cuando la validación no alcanza el umbral esperado.
 
-  Check the [UI Demo](https://agentic-bank-statement-data-extractor-7rvue4pawucidhc9nflccd.streamlit.app/)
+## Qué hace
 
-  <!-- Main image -->
-  <img src="assets/images/Second_Module_3.png" width="1250" />
+- Extrae datos estructurados de estados de cuenta bancarios.
+- Soporta rutas:
+  - `TEXT` para PDFs con texto;
+  - `VISION` para PDFs escaneados.
+- Valida cada campo contra evidencia.
+- Devuelve:
+  - valor extraído;
+  - cita/evidencia;
+  - estado de validación;
+  - sugerencia;
+  - confianza;
+  - motivo.
+- Ejecuta reparación en un número limitado de rondas.
+- Conserva metadata de ejecución.
 
-  <p>
-    <em>Figure 1: Result of using agents to extract data from a bank statement PDF that is image-based.</em>
-  </p>
+## Arquitectura de alto nivel
 
-</div>
+```text
+UI
+ ↓
+Router
+ ├─ TEXT   → extracción de texto
+ └─ VISION → páginas renderizadas → OCR
+ ↓
+Extracción estructurada
+ ↓
+Validación por campo
+ ↓
+Reparación acotada
+ ↓
+Mejor resultado observado
+```
 
-Reliable data extraction from documentation (PDFs) remains a hard problem in production systems. Documents like bank statements vary widely across institutions and are frequently delivered as a mix of machine-readable PDFs and scanned, image-based documents. Layout changes, noisy tables, and inconsistent formatting routinely break rule-based parsers and template-driven solutions, forcing manual review and introducing downstream risk.
+El nombre del banco se selecciona en la UI y se mantiene como un valor determinístico.
 
-This project was built to levarage the power of LLMs to treat data extraction as an **iterative, fast, and self-correcting process**. The result is a reproducible, auditable, and extensible foundation for bank statement ingestion that prioritizes correctness, explainability, and robustness over brittle heuristics.
+## Instalación
 
----
+Consulta:
 
-## What This Project Does
+`assets/docs/INSTALL.md`
 
-- Extracts structured data from **bank statement PDFs**
-- Supports both:
-  - **TEXT PDFs** (machine-readable)
-  - **VISION PDFs** (scanned / image-based)
-- Validates every extracted field with:
-  - Evidence quotes from the source
-  - PASS / FAIL / UNCERTAIN status
-- Automatically repairs failed fields in bounded loops
-- Produces auditable outputs suitable for finance, compliance, and analytics
+## Ejecutar localmente
 
----
+Desde la carpeta `app/` de este proyecto:
 
-## Key Features
+```powershell
+streamlit run app/ui_streamlit.py
+```
 
-- **Agentic workflow** with explicit roles and contracts
-- **Autonomous routing**: TEXT vs VISION detection
-- **Evidence-grounded validation**
-- **Self-repair and convergence**
-- **Deterministic bank name control** (never inferred from PDF)
-- **Human-readable UI** + machine-consumable outputs
+O, desde la carpeta del Experimento 02:
 
----
+```powershell
+.\scripts\iniciar-demo.ps1
+```
 
-## Installation & Setup
+La URL local normalmente es:
 
-This project can be run locally to reproduce both **TEXT** and **VISION (OCR)** workflows.
+`http://localhost:8501`
 
-A full, step-by-step installation and reproducibility guide is provided separately to keep this README concise.
+## PDFs de demostración incluidos
 
-👉 **See:** [Installation Guide](assets/docs/INSTALL.md)
+`assets/bank_statements/statement_sample1.pdf`
 
-The installation guide covers:
-- Environment setup (Python, virtualenv, dependencies)
-- OpenAI API configuration
-- Running the Streamlit UI
-- Reproducing TEXT vs VISION routing
-- Expected artifacts and outputs
-- Troubleshooting common issues
+`assets/bank_statements/statement_ocr.pdf`
 
----
+Estos archivos permiten demostrar las rutas TEXT y VISION respectivamente.
 
-## High-Level Architecture
+## Seguridad y privacidad
 
-**Flow:**
+El routing y el renderizado de PDF ocurren localmente.
 
-1. User uploads a PDF via UI  
-2. Router Agent determines TEXT vs VISION  
-3. Specialized Extraction Agent runs  
-4. Validator Agent checks each field against source text  
-5. Repair Agent fixes failures (bounded loop)  
-6. Final structured outputs + metadata returned  
+Sin embargo, el proyecto actual usa la API configurada para operaciones con modelos:
+- la ruta TEXT envía texto extraído;
+- la ruta VISION envía imágenes renderizadas para OCR.
 
-<p align="center">
-  <img src="assets/images/architecture.png" width=1250" />
-</p>
-<p align="center">
-  <em>Figure 2: Agentic AI Workflow Architecture click image to open PDF.</em>
-</p>
+El proyecto no implementa todavía enmascaramiento automático de valores sensibles antes de esas llamadas.
 
-👉 **Check:** [Roadmap](assets/docs/Agentic_AI_Project_Architecture.pdf)
+Por esa razón, esta versión debe utilizarse únicamente con documentos de demostración o información autorizada.
 
----
+## Límites actuales
 
-## Security & Data Privacy
+- Los esquemas están diseñados alrededor de los formatos de demostración incluidos.
+- Un formato bancario distinto puede producir resultados deficientes.
+- La reparación está limitada por `max_rounds`.
+- La UI es una demostración y no un sistema de producción.
 
-This system is designed with a **local-first processing model**, but it is important to clearly state its current security boundaries.
+## Extensiones previstas
 
-- PDF files are **processed locally** for routing (TEXT vs VISION) and for PDF-to-image rendering.
-- **PDF files are never uploaded as files** to OpenAI or stored in external object storage.
-- For LLM operations:
-  - The **TEXT pipeline** sends extracted text segments to the OpenAI API.
-  - The **VISION pipeline** sends rendered page images to the OpenAI API for OCR.
-- As a result, **OpenAI has transient access to the extracted content or images** during API inference.
-  - This access is **momentary** and used strictly to generate the requested response.
-  - No user data is stored, trained on, or persisted by the system by default.
+- procesamiento por lotes;
+- almacenamiento persistente;
+- API de servicio;
+- integración con CRM/ERP;
+- controles de acceso y auditoría;
+- opciones de despliegue más aisladas.
 
-#### Current Limitations
+## Autor
 
-- The system does **not yet apply automated redaction or masking** to sensitive values (e.g., account numbers, balances) before sending content to the LLM.
-- All validation and repair steps operate on the same extracted content passed to the model.
-
-#### Planned Security Enhancements
-
-Future iterations can further harden privacy and compliance by adding:
-
-- **Field-level masking or partial obfuscation** (e.g., last-4 digits only) before LLM calls.
-- **Selective tokenization** of sensitive fields for validation-only workflows.
-- **On-prem or self-hosted LLM deployments** for fully isolated environments.
-- **Role-based access controls and audit logs** for multi-user deployments.
-
-This design makes the current system suitable for **research, prototyping, and controlled environments**, while providing a clear path toward stricter security and compliance requirements in production settings.
-
-
----
-
-## Designed to Support
-
-- **On-prem deployment**  
-  The system is designed to run entirely in a local or self-hosted environment, enabling use in regulated or security-sensitive contexts where data cannot leave controlled infrastructure.
-
-- **API isolation**  
-  Core extraction, validation, and repair logic is decoupled from the UI, allowing the workflow to be exposed as a service or integrated into existing systems without coupling to Streamlit or frontend concerns.
-
-- **Database-backed auditing (future work)**  
-  The architecture anticipates persistent storage of extractions, validation reports, evidence snippets, and run metadata to enable traceability, compliance reviews, and historical quality analysis.
-
----
-
-## Planned Extensions
-
-- **Batch / multi-file processing**  
-  Support for high-volume ingestion pipelines where large sets of statements must be processed deterministically and monitored at scale.
-
-- **Persistent storage (PostgreSQL / BigQuery)**  
-  Centralized storage of structured outputs, validation results, and metadata to support analytics, monitoring, and downstream consumption.
-
-- **FastAPI service layer**  
-  A stateless API layer to expose the extraction workflow programmatically, enabling integration with internal services and external applications.
-
-- **CRM / ERP integrations**  
-  Direct handoff of validated financial data into operational systems to reduce manual data entry and reconciliation effort.
-
----
-
-## Additional Capabilities (Planned)
-
-- **Additional OCR format adapters**  
-  Pluggable adapters for alternative OCR engines or document renderers to improve robustness across document types and vendors.
-
-- **Role-based access and audit logging**  
-  Fine-grained access control and immutable audit trails to support enterprise governance, compliance, and multi-user environments.
-
----
-
-## Author
-
-[Angel A. Barrera](https://www.linkedin.com/in/angomezu/) | ML Engineer, M.S. Data Science
-
-**Check more cool projects here:** [Portfolio](https://angomezu.github.io/)
-
+Angel A. Barrera

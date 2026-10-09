@@ -1,4 +1,4 @@
-# Claude Code prompt
+# Prompt para Claude Code
 
 ```text
 Implementa NEXT_TASK.md.

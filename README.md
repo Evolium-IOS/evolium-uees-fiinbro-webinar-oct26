@@ -1,12 +1,33 @@
-# UEES × FIINBRO Webinar Experiments — Oct 2026
+# Experimentos del Webinar UEES × FIINBRO — Octubre 2026
 
-Hands-on material for the webinar **“De Ingenieros a Investigadores: cómo la IA está redefiniendo el futuro de los datos y el desarrollo de software.”**
+Material práctico para el webinar **“De Ingenieros a Investigadores: cómo la IA está redefiniendo el futuro de los datos y el desarrollo de software.”**
 
-This repository is organized as two reproducible experiments:
+Este repositorio está organizado para que cada experimento pueda:
+- presentarse en vivo;
+- ensayarse de forma repetible;
+- replicarse después por los estudiantes;
+- explicar no solo *qué* se construyó, sino *por qué* y *cómo se valida*.
 
-- **Experiment 01 — AI engineering harness:** compare a normal conversational AI client with an agent working inside a controlled repository with instructions, source code, tests, and Git evidence.
-- **Experiment 02 — Bank documents → operational system:** demonstrate the research/prototype path from document extraction and validation toward the broader operational problems later reflected in ORION.
+## Experimentos
 
-The experiments are designed both for the live webinar and for students to reproduce afterward.
+### 01 — IA dentro del entorno de ingeniería
+Compara una conversación normal con un asistente de IA frente a un agente de código que trabaja dentro de un repositorio con instrucciones persistentes, código, pruebas, Git y terminal.
 
-> Do not commit API keys, credentials, private banking data, or production secrets.
+**Idea central:** el modelo importa, pero el sistema alrededor del modelo también.
+
+### 02 — De documentos bancarios a un sistema operativo
+Muestra un experimento real de extracción y validación de datos desde estados de cuenta bancarios, y cómo ese tipo de investigación revela problemas más amplios de reglas, contexto, revisión humana, flujo operativo y gobernanza.
+
+**Idea central:** extraer el dato es solo el comienzo.
+
+## Seguridad
+
+No subas:
+- claves API;
+- archivos `.env`;
+- credenciales;
+- documentos bancarios privados;
+- información personal real;
+- secretos de producción.
+
+Consulta `PRESENTER_RUNBOOK.md` para el orden de presentación.

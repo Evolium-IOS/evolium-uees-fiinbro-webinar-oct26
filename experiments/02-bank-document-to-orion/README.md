@@ -1,37 +1,73 @@
-# Experiment 02 — Bank Documents → Operational System
+# Experimento 02 — De documentos bancarios a un sistema operativo
 
-## Goal
-Show how a focused research/prototype question can reveal the need for a broader operational system.
+## Pregunta
 
-Initial technical flow:
+**¿Cómo una investigación técnica enfocada revela la necesidad de un sistema operativo más amplio?**
+
+El experimento real procesa estados de cuenta bancarios y demuestra este flujo:
+
 ```text
-document → identify input type → extract fields → validate → bounded repair/retry → structured result
+documento
+  → detectar tipo de PDF
+  → extraer campos
+  → validar contra evidencia
+  → reparar de forma acotada
+  → resultado estructurado
 ```
 
-Operational questions that follow:
+Luego hacemos la pregunta importante:
+
+**¿Qué falta para que esto funcione dentro de una operación real?**
+
 ```text
-rules → context → human review → workflow → decisions → governance
+reglas
+  → contexto
+  → revisión humana
+  → flujo de trabajo
+  → decisiones
+  → gobernanza
 ```
 
-## Upload the bank project here
-Place the source under:
+Ese es el puente conceptual hacia ORION.
+
+## Proyecto
+
+El código real está en:
+
 ```text
-experiments/02-bank-document-to-orion/app/
+app/
 ```
 
-Before pushing to this **public repository**, remove:
-- .env files;
-- API keys and credentials;
-- private/real bank statements;
-- personal information;
-- virtual environments and caches.
+La UI se ejecuta con Streamlit.
 
-After upload, the source must be inspected before we define the actual local launcher. The next pass will add:
-- reproducible setup;
-- one-command localhost UI launcher;
-- sanitized demo input;
-- exact presenter runbook;
-- fallback evidence/screenshots;
-- student replication instructions.
+## Inicio rápido para el webinar
 
-Do not rewrite the project architecture before inspecting the uploaded source.
+Primera vez:
+
+```powershell
+.\scripts\preparar-entorno.ps1
+```
+
+Luego configurar:
+
+```text
+app\.env
+```
+
+Para iniciar la demo:
+
+```powershell
+.\scripts\iniciar-demo.ps1
+```
+
+La aplicación abre normalmente en:
+
+```text
+http://localhost:8501
+```
+
+## Seguridad
+
+Utilizar únicamente los PDFs de demostración aprobados.
+
+Nunca presentar documentos bancarios reales, claves API, archivos `.env` ni información personal.

@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+Thumbs.db
+tmp/
+artifacts/
+demo-output/
+experiments/02-bank-document-to-orion/private/
+experiments/02-bank-document-to-orion/app/.env
+experiments/02-bank-document-to-orion/app/.env.*

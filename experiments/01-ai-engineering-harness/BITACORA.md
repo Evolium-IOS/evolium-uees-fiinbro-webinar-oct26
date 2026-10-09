@@ -1,55 +1,58 @@
-# Bitácora: experimento controlado de IA e ingeniería
+# Bitácora: contexto de ingeniería y agentes de IA
 
-## Pregunta e hipótesis
+## Pregunta
 
-**Pregunta:** ¿qué aporta un entorno de ingeniería cuando dos asistentes reciben la misma tarea y documentación técnica?
+¿Qué cambia cuando damos el mismo mensaje sin requisitos adjuntos a un cliente web y a un agente dentro de un repositorio con estándares y pruebas?
 
-**Hipótesis:** con acceso operativo a repositorio, pruebas y Git se facilita la verificación directa de cambios.
+## Hipótesis
 
-## Control inicial
+El acceso al repositorio permite al agente descubrir contexto persistente y verificar cambios directamente. Un cliente sin acceso debe pedir información, inferirla o declarar límites.
+
+## Condiciones iniciales
 
 - Fecha:
-- Modelo de Claude Web (nombre/versión visible):
-- Modelo de Claude Code (nombre/versión visible):
-- ¿Se utilizó el mismo mensaje de prompts/mensaje-unico.md?: Sí / No
-- ¿Se adjuntó contexto-web.md completo a Claude Web?: Sí / No
-- ¿El agente partió del tag demo-baseline?: Sí / No
-- ¿Se habilitaron herramientas de ejecución adicionales en Claude Web?: Sí / No
-- Desviaciones del procedimiento:
+- Modelo utilizado en Claude Web:
+- Modelo utilizado en Claude Code:
+- ¿Se usó exactamente el mismo mensaje?: Sí / No
+- ¿Claude Web estaba en una conversación nueva sin archivos ni proyecto conectado?: Sí / No
+- ¿Claude Code inició sesión nueva dentro del repositorio temporal?: Sí / No
+- ¿Partimos del commit demo: baseline?: Sí / No
+- ¿Se dieron pistas adicionales a alguna condición?: Sí / No
+- Desviaciones:
 
-## Observaciones
+## Registro de observaciones
 
-| Pregunta | Claude Web | Claude Code |
+| Observación | Claude Web (sin contexto local) | Claude Code (con repositorio) |
 | --- | --- | --- |
-| ¿Qué archivos o instrucciones consultó? | | |
-| ¿Cumplió el criterio de customer_id? | | |
-| ¿Qué cambio propuso o aplicó? | | |
-| ¿Añadió pruebas? | | |
-| ¿Editó el proyecto local? | | |
-| ¿Ejecutó las pruebas del repositorio? | | |
-| ¿Mostró un diff real? | | |
-| ¿Qué verificó efectivamente? | | |
-| ¿Qué intervención manual fue necesaria? | | |
+| ¿Pidió ver el código o preguntó por reglas? | | |
+| ¿Formuló suposiciones? ¿Cuáles? | | |
+| ¿Reconoció qué información le faltaba? | | |
+| ¿Qué archivos leyó realmente? | No disponibles | |
+| ¿Consultó AGENTS.md, CLAUDE.md y NEXT_TASK.md? | No disponibles | |
+| ¿Qué cambio propuso o implementó? | | |
+| ¿Ejecutó pruebas sobre qué archivos? | | |
+| ¿Hubo diff contra el repositorio original? | | |
+| ¿Qué intervención humana necesitó? | | |
 
-## Evidencia técnica
+## Evidencia independiente del repositorio
 
-- Línea base: _____ pruebas pasan, _____ fallan.
-- Después de Claude Code: _____ pruebas pasan, _____ fallan.
-- Revisión independiente de git diff --check: PASS / FAIL.
-- ¿Claude Web entregó un parche aplicable?: Sí / No.
-- ¿Se aplicó ese parche a una copia limpia y se ejecutó la misma suite?: Sí / No.
-- Si se ejecutó, resultado: _____ pasan, _____ fallan.
-- Archivos cambiados:
-- Capturas o registro de salida:
+- Línea base: _____ pruebas correctas / _____ fallidas.
+- Resultado después de Claude Code: _____ correctas / _____ fallidas.
+- git diff --check: PASS / FAIL.
+- Archivos modificados:
+- ¿Cumple customer_id válido (existe, string, no vacío después de strip)?: Sí / No / No comprobado.
+- ¿Se preservan firma, orden, datos originales y comportamiento válido?: Sí / No / No comprobado.
+- ¿Se hicieron commits?: Sí / No.
+- Captura o copia de salida real:
 
 ## Interpretación
 
-1. ¿En cuál condición se observó lectura efectiva de las instrucciones de proyecto?
-2. ¿La calidad funcional del código pudo compararse con las mismas pruebas? ¿Por qué?
-3. ¿Qué parte del proceso exigió intervención manual?
-4. ¿Qué evidencias permiten afirmar que un cambio fue comprobado?
-5. ¿Qué resultados **no** podemos concluir a partir de una sola demostración?
+1. ¿Qué pudo hacer Claude Web **sin recibir el código**? Si pidió más datos, ¿fue razonable?
+2. ¿Claude Code encontró la información necesaria o también hizo suposiciones?
+3. ¿Qué reglas empresariales habrían sido fáciles de pasar por alto sin documentación de proyecto?
+4. ¿Qué aportaron los tests y Git para comprobar la corrección?
+5. ¿Qué evidencia haría falta para afirmar que la IA mejoró seguridad, calidad o productividad?
 
-## Conclusión basada en datos
+## Conclusión
 
-Describe lo observado sin afirmar que un modelo es universalmente superior o que la ingeniería garantiza resultados correctos.
+Formula una conclusión **sobre la diferencia de contexto disponible y el proceso de ingeniería**, no sobre la capacidad intrínseca del modelo. No afirmes que el código producido sin contexto necesariamente rompe sistemas.

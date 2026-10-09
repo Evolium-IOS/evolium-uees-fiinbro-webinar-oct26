@@ -26,7 +26,7 @@ Restricciones:
 - conserva el comportamiento existente para registros válidos;
 - usa solamente la biblioteca estándar de Python.
 
-Propón el cambio y las pruebas que agregarías.
+Propone el cambio y las pruebas que agregarías.
 
 ---
 

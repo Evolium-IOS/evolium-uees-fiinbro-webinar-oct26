@@ -1,58 +1,49 @@
-# Bitácora: contexto de ingeniería y agentes de IA
+# Bitácora del Experimento 01
 
 ## Pregunta
 
-¿Qué cambia cuando damos el mismo mensaje sin requisitos adjuntos a un cliente web y a un agente dentro de un repositorio con estándares y pruebas?
+¿Qué cambia entre pedir una corrección sobre un fragmento pegado en Claude Web y trabajar dentro del repositorio con Claude Code?
 
 ## Hipótesis
 
-El acceso al repositorio permite al agente descubrir contexto persistente y verificar cambios directamente. Un cliente sin acceso debe pedir información, inferirla o declarar límites.
+La integración al repositorio permite consultar reglas, detectar requisitos existentes, ejecutar pruebas y revisar cambios sobre el código real.
 
-## Condiciones iniciales
+## Condiciones
 
 - Fecha:
-- Modelo utilizado en Claude Web:
-- Modelo utilizado en Claude Code:
-- ¿Se usó exactamente el mismo mensaje?: Sí / No
-- ¿Claude Web estaba en una conversación nueva sin archivos ni proyecto conectado?: Sí / No
-- ¿Claude Code inició sesión nueva dentro del repositorio temporal?: Sí / No
-- ¿Partimos del commit demo: baseline?: Sí / No
-- ¿Se dieron pistas adicionales a alguna condición?: Sí / No
-- Desviaciones:
+- Claude Web (modelo visible):
+- Claude Code (modelo visible):
+- ¿Se enviaron exactamente los prompts incluidos en este repositorio?: Sí / No
+- ¿Claude Web recibió solo el fragmento de código del prompt, sin otros archivos?: Sí / No
+- ¿Claude Code inició nueva sesión en el repo temporal limpio?: Sí / No
+- ¿Se suministraron aclaraciones adicionales durante la prueba?: Sí / No
+- Observaciones:
 
-## Registro de observaciones
+## Resultados
 
-| Observación | Claude Web (sin contexto local) | Claude Code (con repositorio) |
+| Evidencia | Claude Web | Claude Code |
 | --- | --- | --- |
-| ¿Pidió ver el código o preguntó por reglas? | | |
-| ¿Formuló suposiciones? ¿Cuáles? | | |
-| ¿Reconoció qué información le faltaba? | | |
-| ¿Qué archivos leyó realmente? | No disponibles | |
-| ¿Consultó AGENTS.md, CLAUDE.md y NEXT_TASK.md? | No disponibles | |
-| ¿Qué cambio propuso o implementó? | | |
-| ¿Ejecutó pruebas sobre qué archivos? | | |
-| ¿Hubo diff contra el repositorio original? | | |
-| ¿Qué intervención humana necesitó? | | |
+| ¿Qué información recibió al comenzar? | Función pegada | Archivo Python local |
+| ¿Consultó o solicitó criterios faltantes? | | |
+| ¿Qué supuso sobre customer_id válido? | | |
+| ¿Qué solución propuso o aplicó? | | |
+| ¿Consultó código existente y reglas? | | |
+| ¿Agregó pruebas? | | |
+| ¿Ejecutó pruebas? ¿Dónde? | | |
+| ¿Qué archivos locales cambiaron? | | |
+| ¿Existe diff verificable contra Git local? | | |
+| ¿Cuánta intervención humana fue necesaria? | | |
 
-## Evidencia independiente del repositorio
+## Verificación de Claude Code
 
-- Línea base: _____ pruebas correctas / _____ fallidas.
-- Resultado después de Claude Code: _____ correctas / _____ fallidas.
+- Línea base: ____ PASS y ____ FAIL.
+- Resultado posterior: ____ PASS y ____ FAIL.
 - git diff --check: PASS / FAIL.
-- Archivos modificados:
-- ¿Cumple customer_id válido (existe, string, no vacío después de strip)?: Sí / No / No comprobado.
-- ¿Se preservan firma, orden, datos originales y comportamiento válido?: Sí / No / No comprobado.
-- ¿Se hicieron commits?: Sí / No.
-- Captura o copia de salida real:
-
-## Interpretación
-
-1. ¿Qué pudo hacer Claude Web **sin recibir el código**? Si pidió más datos, ¿fue razonable?
-2. ¿Claude Code encontró la información necesaria o también hizo suposiciones?
-3. ¿Qué reglas empresariales habrían sido fáciles de pasar por alto sin documentación de proyecto?
-4. ¿Qué aportaron los tests y Git para comprobar la corrección?
-5. ¿Qué evidencia haría falta para afirmar que la IA mejoró seguridad, calidad o productividad?
+- ¿Se conservaron orden, firma y entradas?: Sí / No / No verificado.
+- ¿Se aplicó el criterio de customer_id del repositorio?: Sí / No / No verificado.
+- ¿Se hicieron commits o pushes?: Sí / No.
+- Capturas o salidas relevantes:
 
 ## Conclusión
 
-Formula una conclusión **sobre la diferencia de contexto disponible y el proceso de ingeniería**, no sobre la capacidad intrínseca del modelo. No afirmes que el código producido sin contexto necesariamente rompe sistemas.
+Separa **capacidad de generar código**, **acceso al contexto del proyecto** y **evidencia de verificación**. No afirmes que el cliente web falló solo porque pidió aclaraciones, ni que su solución habría roto un sistema real sin haberla probado.

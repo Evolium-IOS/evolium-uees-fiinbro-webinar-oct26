@@ -1,0 +1,10 @@
+{
+  "policy_revision": "CL-014-2026-10",
+  "processable_status": "ready",
+  "customer_id_regex": "C-[0-9]{3}",
+  "reserved_customer_ids": [
+    "C-000",
+    "C-042",
+    "C-777"
+  ]
+}

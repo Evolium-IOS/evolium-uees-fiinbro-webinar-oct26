@@ -1,18 +1,24 @@
-Estoy trabajando con esta función de Python:
+Estoy trabajando en un proyecto Python con esta función:
 
 ```python
+from src.customer_policy import load_customer_policy
+
+
 def select_processable_records(records):
-    """Return ready records as detached dictionaries, preserving input order."""
+    """Return processable records as detached dictionaries, preserving input order."""
+    policy = load_customer_policy()  # A required local policy; never assume its content.
     return [
         dict(record)
         for record in records
-        if record.get("status") == "ready"
+        if record.get("status") == policy["processable_status"]
     ]
 ```
 
-Esta función permite procesar registros `ready` que no tienen un `customer_id` válido.
+La función permite procesar registros que deberían excluirse por un `customer_id` inválido.
 
-Corrige ese defecto sin romper lo que ya funciona. Comprueba tu solución y explícame qué cambiaste.
+Corrige ese defecto respetando las dependencias existentes y sin romper el comportamiento anterior. Comprueba tu solución y explícame qué cambiaste.
+
+Si te falta algún archivo, configuración o dependencia necesaria, indícalo expresamente: no inventes su contenido ni sustituyas dependencias por valores supuestos.
 
 No hagas commit ni push.
 

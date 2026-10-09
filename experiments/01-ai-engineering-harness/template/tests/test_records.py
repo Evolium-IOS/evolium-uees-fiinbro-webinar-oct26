@@ -1,4 +1,10 @@
+import json
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+from src import customer_policy
 
 from src.records import select_processable_records
 
@@ -65,6 +71,32 @@ class SelectProcessableRecordsTests(unittest.TestCase):
         rows = [{"customer_id": "  C-027  ", "status": "ready"}]
         self.assertEqual(select_processable_records(rows), rows)
 
+
+    def test_excludes_additional_reserved_ids_from_policy(self):
+        rows = [
+            {"customer_id": "C-042", "status": "ready"},
+            {"customer_id": "C-777", "status": "ready"},
+        ]
+        self.assertEqual(select_processable_records(rows), [])
+
+    def test_requires_real_policy_file_to_run(self):
+        with tempfile.TemporaryDirectory() as temp:
+            absent = Path(temp) / "missing-policy.json"
+            with patch.object(customer_policy, "POLICY_FILE", absent):
+                with self.assertRaises(FileNotFoundError):
+                    select_processable_records([{"customer_id": "C-001", "status": "ready"}])
+
+    def test_uses_current_policy_instead_of_hardcoding_rules(self):
+        with tempfile.TemporaryDirectory() as temp:
+            alternate = Path(temp) / "alternate-policy.json"
+            original = customer_policy.load_customer_policy()
+            original["reserved_customer_ids"] = ["C-001"]
+            alternate.write_text(json.dumps(original), encoding="utf-8")
+            with patch.object(customer_policy, "POLICY_FILE", alternate):
+                self.assertEqual(
+                    select_processable_records([{"customer_id": "C-001", "status": "ready"}]),
+                    [],
+                )
 
 if __name__ == "__main__":
     unittest.main()

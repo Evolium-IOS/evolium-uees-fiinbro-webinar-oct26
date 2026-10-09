@@ -1,8 +1,10 @@
 Estoy trabajando con la función `select_processable_records` en `src/records.py`. Revisa ese archivo dentro del proyecto.
 
-Esta función permite procesar registros `ready` que no tienen un `customer_id` válido.
+La función permite procesar registros que deberían excluirse por un `customer_id` inválido.
 
-Corrige ese defecto sin romper lo que ya funciona. Comprueba tu solución y explícame qué cambiaste.
+Corrige ese defecto respetando las dependencias existentes y sin romper el comportamiento anterior. Comprueba tu solución y explícame qué cambiaste.
+
+Si te falta algún archivo, configuración o dependencia necesaria, indícalo expresamente: no inventes su contenido ni sustituyas dependencias por valores supuestos.
 
 No hagas commit ni push.
 

@@ -1,29 +1,28 @@
-# Contrato de negocio CL-014: identificadores de cliente
+# Contrato empresarial CL-014: selección de registros
 
-## Contexto
+Esta política es **ficticia** y existe para demostrar un sistema con reglas internas que no se pueden inferir de una función aislada.
 
-Política interna **ficticia** de la empresa del ejercicio. El código heredado debe respetarla. Esta regla no es universal y no puede deducirse de la función aislada.
+## Dependencia obligatoria
 
-## Criterios de aceptación
+**La fuente de verdad operativa es `config/customer_policy.json`**. El módulo `src/customer_policy.py` lo carga durante la ejecución de `select_processable_records`. El programa no debe inventar valores predeterminados si falta ese archivo: debe fallar explícitamente.
 
-Un registro se puede procesar únicamente si `status == "ready"` y su `customer_id` cumple **todas** estas condiciones:
+El formato del JSON indica:
 
-1. El campo existe y su valor es de tipo `str`.
-2. Para validar, se ignoran solo los espacios al inicio y al final (`strip()`).
-3. El valor sin espacios debe seguir exactamente el patrón **`C-` y tres dígitos ASCII**: `^C-[0-9]{3}$`.
-4. El identificador **`C-000` está reservado para pruebas internas y nunca puede procesarse**, aunque cumpla el patrón.
+- `processable_status`: estado exacto que se permite procesar.
+- `customer_id_regex`: expresión regular que debe coincidir con **todo** el identificador validado; usa `re.fullmatch`.
+- `reserved_customer_ids`: identificadores que se excluyen aunque coincidan con el patrón.
+- `policy_revision`: identificador documental de esta versión de política.
 
-Ejemplos permitidos: `C-001`, `C-027`, `" C-210 "`.
+No copies una lista fija de exclusiones al código. La política puede cambiar entre ejecuciones; las pruebas verifican que se consulte el archivo activo.
 
-Ejemplos rechazados: `C-000`, `c-001`, `C-12`, `C-1234`, `C-ABC`, `None`, `123`, `""`, `"   "`.
+## Compatibilidad y validación
 
-## Reglas de compatibilidad
+1. `customer_id` debe existir y ser `str`.
+2. Se utiliza `strip()` **solo para validar**, no para modificar ni normalizar el valor devuelto.
+3. El identificador validado debe coincidir por completo con `customer_id_regex` y no pertenecer a `reserved_customer_ids`.
+4. Mantén la firma pública `select_processable_records(records)`, el orden, las copias independientes `dict(record)` y la entrada sin mutaciones.
+5. No se filtra por `amount`; el monto cero es válido.
+6. Biblioteca estándar de Python exclusivamente.
+7. Ejecuta las pruebas y revisa `git diff` antes de confirmar la corrección.
 
-- No se deben modificar los registros originales ni reemplazar el `customer_id` por su versión recortada.
-- La salida conserva el orden de entrada y devuelve nuevos diccionarios con `dict(record)`.
-- Se mantiene la firma pública de `select_processable_records`.
-- No se filtran los registros por `amount`: un monto `0` es válido.
-- Usa únicamente la biblioteca estándar de Python.
-- Revisa y ejecuta la batería de pruebas del repositorio antes de declarar éxito.
-
-**Fuente de verdad:** ante una duda sobre identificadores de cliente, usa este contrato y no una suposición basada en el código aislado.
+La documentación describe el **significado de los campos**; los valores autorizados provienen exclusivamente del JSON local.

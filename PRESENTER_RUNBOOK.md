@@ -1,72 +1,53 @@
 # Guía del presentador
 
-El Experimento 01 compara trabajar con una función pegada en el chat frente a trabajar con la misma función dentro de un repositorio con un **contrato de negocio documentado**. El Experimento 02 presenta extracción y validación de PDF bancarios.
+## Preparación del Experimento 01
 
-## Preparación
+- Proyecto principal actualizado con git pull.
+- Copia temporal actualizada con **reset-demo.ps1 -ActualizarPlantilla** (descarta cambios de la práctica).
+- Verificar que existen **src/customer_policy.py** y **config/customer_policy.json** en el repositorio temporal.
+- Línea base: **14 pruebas, 9 PASS y 5 FAIL intencionales**.
+- Claude Web: conversación nueva, sin adjuntos, proyectos ni accesos al repositorio.
+- Claude Code: sesión nueva desde VS Code en C:\Evolium\webinar-experiment-01-live.
+- Prompts preparados: prompts/claude-web.md y prompts/claude-code.md.
+- Modelos equivalentes cuando estén disponibles. No mostrar la política al cliente web.
+- Experimento 02 listo con Streamlit en ejecución, credenciales ocultas y PDF de prueba.
 
-- Claude Web en conversación nueva, sin proyecto ni adjuntos.
-- Abrir prompts/claude-web.md y prompts/claude-code.md.
-- Modelos de la misma familia y versión, si está disponible.
-- VS Code abierto en C:\Evolium\webinar-experiment-01-live.
-- Copia de práctica actualizada con \`reset-demo.ps1 -ActualizarPlantilla\` si fue creada antes de la actualización.
-- Línea base verificada: **11 pruebas, 8 PASS y 3 FAIL intencionales**.
-- Una sesión nueva de Claude Code lista desde la terminal integrada.
-- Streamlit del Experimento 02 iniciado antes del webinar.
-- Credenciales ocultas y evidencia del ensayo disponible como respaldo.
+## Apertura
 
-## Experimento 01 (4 a 5 minutos)
+> "En una empresa, el código depende de contratos y archivos de configuración. ¿Puede una IA certificar una corrección sin disponer de ellos?"
 
-### Pregunta
+## Claude Web: fragmento aislado
 
-> "¿Qué ocurre si pedimos a la IA que corrija un fragmento de código, pero la empresa tiene reglas que el código por sí solo no puede explicar?"
+1. Pegar **todo** prompts/claude-web.md, incluido el import de un módulo que no se entregó.
+2. No proporcionar archivos adicionales.
+3. Mostrar si detecta la dependencia, si propone una implementación con supuestos y qué declara en **Estado, Evidencia y Pendientes**.
+4. Si ejecuta tests en una reconstrucción propia, aclarar que **no son las pruebas del repositorio empresarial**.
 
-**Hipótesis:** el repositorio permite descubrir criterios que no figuran en el código pegado y comprobarlos antes de declarar una corrección.
+## Claude Code: acceso a archivos reales
 
-### Claude Web
+1. Abrir el repo temporal en VS Code y confirmar carpeta.
+2. Mostrar línea base con fallos intencionales.
+3. Pegar **todo** prompts/claude-code.md en una nueva sesión Claude Code.
+4. Observar si consulta la política JSON, el módulo cargador, el contrato y las pruebas.
+5. Permitir editar y probar; no commits ni pushes.
+6. Salir y verificar independientemente con unittest y git diff.
 
-1. Iniciar conversación nueva.
-2. Pegar el contenido de **prompts/claude-web.md**, incluido el código.
-3. Mostrar la propuesta o la solicitud de aclaraciones.
-4. No adjuntar ni explicar el contrato interno de negocio.
+## Revelación y conclusión
 
-> "Esta solución podría parecer correcta. ¿Pero conoce nuestras excepciones empresariales? No se las dimos."
+Abrir **config/customer_policy.json** y **docs/CONTRATO_IDENTIFICADOR_CLIENTE.md** solo tras mostrar las respuestas.
 
-### Claude Code en VS Code
+> "La diferencia no está en escribir una función. Está en conocer las dependencias reales y poder demostrar que el cambio respeta el sistema existente."
 
-1. Confirmar carpeta de práctica y mostrar línea base (8 PASS, 3 FAIL).
-2. Abrir sesión nueva con \`claude\`.
-3. Pegar **prompts/claude-code.md**. Incluye la ruta al archivo Python, no el código.
-4. Observar si el agente consulta AGENTS.md, CLAUDE.md, NEXT_TASK.md y el contrato en \`docs/\`.
-5. Dejar que modifique y ejecute las pruebas. No hacer commits ni pushes.
-6. Ejecutar pruebas y revisar \`git diff\` de forma independiente.
+La dependencia empresarial es **ficticia**. No afirmar que Claude Web es incapaz de programar: sin ese archivo no puede comprobar la integración con el sistema real. Tampoco afirmar superioridad intrínseca o seguridad absoluta de Claude Code.
 
-### Revelación del contrato y conclusión
+[Instrucciones](experiments/01-ai-engineering-harness/README.md) | [Bitácora](experiments/01-ai-engineering-harness/BITACORA.md)
 
-Mostrar **docs/CONTRATO_IDENTIFICADOR_CLIENTE.md** después de la ejecución. Explicar que la empresa tiene una norma concreta sobre formato y exclusiones que no estaba en el mensaje de Claude Web.
+## Experimento 02 (PDF bancario)
 
-> "La diferencia no es que el chat no pueda programar. Es que una empresa tiene requisitos, excepciones y pruebas. Un cambio solo es confiable cuando los respeta y podemos comprobarlo."
+1. Abrir la aplicación Streamlit ya iniciada.
+2. Cargar un PDF de prueba sin datos privados.
+3. Mostrar TEXT o VISION.
+4. Ejecutar extracción y validación; leer PASS/FAIL/UNCERTAIN y evidencias.
+5. Conectar conceptualmente con ORION, sin afirmar que el extractor sea ORION.
 
-**Importante:** la documentación de negocio es ficticia y solo existe para el ejercicio; no representa políticas universales. Sin probar la solución web en otra copia del repositorio, no se puede afirmar que habría fallado en producción.
-
-[Guía paso a paso](experiments/01-ai-engineering-harness/README.md) | [Bitácora](experiments/01-ai-engineering-harness/BITACORA.md)
-
-## Experimento 02 (4 a 5 minutos)
-
-1. Formular la pregunta sobre datos confiables.
-2. Abrir Streamlit y cargar un PDF de demostración.
-3. Mostrar routing TEXT o VISION.
-4. Ejecutar extracción y validación.
-5. Mostrar datos, evidencia, PASS/FAIL/UNCERTAIN y metadatos.
-6. Explicar la reparación solo si fue observada.
-7. Relacionar con reglas, contexto, revisión humana y decisiones.
-
-> "Extraer el dato era solo el comienzo."
-
-ORION es un ejemplo de sistemas que enfrentan retos operativos más amplios; el extractor no es literalmente ORION.
-
-## Seguridad
-
-- No mostrar claves, archivos \`.env\`, credenciales ni documentos privados.
-- No instalar dependencias en vivo.
-- No escribir manualmente código de la demo.
-- Si falla una ejecución, usar material verificado de ensayo y aclararlo.
+No mostrar claves API, archivos .env ni datos reales durante el webinar.

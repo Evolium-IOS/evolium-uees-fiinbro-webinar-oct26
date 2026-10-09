@@ -1,34 +1,33 @@
-# Experimento 01: de pegar código a trabajar dentro de un proyecto
+# Experimento 01: código aislado frente a un proyecto con dependencias reales
 
-**Objetivo:** comparar una corrección sugerida a partir de un fragmento de código con una corrección realizada dentro de un repositorio que contiene reglas de negocio y pruebas.
+## Pregunta
 
-## 1. Pregunta de investigación
+**¿Qué ocurre cuando pedimos a la IA que arregle una función que requiere archivos de configuración propios de una empresa, pero solo una interfaz tiene acceso al repositorio?**
 
-**¿Qué cambia al pedir a una IA que corrija código aislado, frente a permitirle trabajar en un proyecto donde los requisitos empresariales ya están documentados?**
+**Hipótesis:** el asistente con acceso al proyecto puede encontrar los módulos, la política operativa y las pruebas para implementar y verificar la corrección. El cliente que recibe solo un fragmento no puede verificar el comportamiento real si le faltan archivos indispensables.
 
-## 2. Hipótesis
+**Importante:** el acceso a dependencias es la variable deliberada. No evaluamos cuál modelo es intrínsecamente mejor.
 
-**Un agente que consulta las normas del repositorio puede detectar criterios empresariales que no aparecen en el fragmento de código y comprobarlos mediante pruebas. Un cliente web sin esos documentos no puede conocer de manera fiable esas reglas específicas, salvo que las pregunte, las reciba o las adivine.**
+## Diseño
 
-Este experimento observa el **efecto del contexto de trabajo**, no la superioridad general de un modelo sobre otro.
-
-## 3. Condiciones
-
-| Condición | Claude Web | Claude Code |
+| | Claude Web | Claude Code |
 | --- | --- | --- |
-| Problema | Corregir el filtro de customer_id | El mismo |
-| Entrada de código | Función pegada en el mensaje | Ruta del archivo src/records.py |
-| Requisitos internos | No se entregan | Disponibles en docs/ y archivos de instrucciones |
-| Pruebas existentes | No se entregan | Disponibles en tests/ |
-| Resultado | Propuesta y posible prueba aislada | Modificación y verificación sobre el Git local |
+| Problema | Corregir registros que deberían excluirse | El mismo |
+| Código inicial | Fragmento de src/records.py pegado en el mensaje | Lee src/records.py del proyecto |
+| Dependencia src/customer_policy.py | No disponible | Disponible |
+| Configuración obligatoria config/customer_policy.json | No disponible | Disponible |
+| Contrato y pruebas | No disponibles | Disponibles |
+| Resultado esperado | Identificar información faltante o aclarar límites | Leer dependencias, corregir y verificar en el repositorio |
 
-Los prompts son **funcionalmente equivalentes, pero no idénticos en palabras**. La diferencia entre la información disponible es deliberada.
+La función **carga la configuración local cada vez que se ejecuta**. Sin el JSON, no puede completarse una ejecución integrada válida. El cliente web puede escribir código alternativo o inventar un entorno simulado, pero eso **no verifica el sistema empresarial real**. El contrato y la configuración son ficticios, creados únicamente para el experimento.
 
-## 4. Preparar el repositorio
+Los mensajes son equivalentes en tarea, pero uno incluye el fragmento de Python y el otro indica su ruta; no son idénticos palabra por palabra.
 
-Requisitos: PowerShell, Git, Python 3, VS Code, [Claude Web](https://claude.ai/) y Claude Code desde la terminal.
+## Preparar
 
-Si es la primera vez:
+Necesitas Windows con PowerShell, Git, Python 3, VS Code, Claude Web y Claude Code CLI.
+
+Si nunca clonaste el repositorio:
 
 ~~~powershell
 New-Item -ItemType Directory -Force -Path C:\Evolium | Out-Null
@@ -36,113 +35,98 @@ cd C:\Evolium
 git clone https://github.com/Evolium-IOS/evolium-uees-fiinbro-webinar-oct26.git
 ~~~
 
-Si ya está clonado:
+Si ya lo tienes y no hay cambios locales pendientes:
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26
 git pull --ff-only
 ~~~
 
-Si Git indica que hay cambios locales que se sobrescribirían, revisa esos cambios antes de actualizar; no borres el proyecto para resolverlo.
+## Copia de práctica
 
-## 5. Preparar el repositorio de práctica
-
-**Primera vez**, sin carpeta de práctica anterior:
+Solo la primera vez:
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
 .\scripts\prepare-demo.ps1
 ~~~
 
-**Si ya lo habías creado con una versión anterior**, actualiza su línea base:
+**Si ya existe C:\Evolium\webinar-experiment-01-live**, debes actualizar la plantilla después del cambio de dependencias:
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
 .\scripts\reset-demo.ps1 -ActualizarPlantilla
 ~~~
 
-**Advertencia:** la segunda instrucción descarta los cambios del ejercicio en C:\Evolium\webinar-experiment-01-live, elimina sus archivos no versionados y crea un nuevo commit de preparación con el contenido de la plantilla. No hace push ni modifica el repositorio principal.
+**Precaución:** el segundo comando descarta todos los cambios locales del repositorio **temporal** (incluidos archivos no versionados) y crea un nuevo commit local de línea base. No hace push ni cambia el repositorio principal.
 
-El proyecto temporal incluye:
+La estructura de la práctica debe contener:
 
 ~~~text
 AGENTS.md
 CLAUDE.md
 NEXT_TASK.md
-docs/
-  CONTRATO_IDENTIFICADOR_CLIENTE.md
-src/
-  records.py
-tests/
-  test_records.py
+config/customer_policy.json
+docs/CONTRATO_IDENTIFICADOR_CLIENTE.md
+src/customer_policy.py
+src/records.py
+tests/test_records.py
 ~~~
 
-Los documentos de docs/ contienen criterios de negocio específicos de una empresa ficticia. **No los adjuntaremos a Claude Web.**
-
-## 6. Comprobar la línea base
+## Comprobar la línea base
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
+Test-Path .\config\customer_policy.json
 git status --short
-git log -1 --oneline
 python -m unittest discover -s tests -v
 ~~~
 
-**Resultado esperado con la nueva plantilla:** 11 pruebas, **8 PASS y 3 FAIL intencionales**. Las fallas muestran la ausencia de validación del identificador, formatos de empresa no aceptados y un identificador interno reservado.
+**Esperado:** True, Git limpio, **14 tests ejecutados: 9 PASS y 5 FAIL intencionales**. Si sigues viendo 11 tests, falta actualizar la plantilla con -ActualizarPlantilla.
 
-Si observas todavía 8 pruebas con 7 PASS y 1 FAIL, tu copia de práctica usa la plantilla antigua: ejecuta el paso 5 con -ActualizarPlantilla.
+No arregles el código manualmente antes de la prueba.
 
-No arregles el código todavía. No presentes el detalle de la política al cliente web.
+## Condición A: Claude Web
 
-## 7. Condición A: Claude Web, código pegado
+1. Abre [Claude Web](https://claude.ai/) en una conversación **nueva**, sin proyecto ni fuentes conectadas.
+2. Abre **[prompts/claude-web.md](prompts/claude-web.md)**.
+3. Copia **todo** el prompt, incluido el código Python con su import de dependencia, y envíalo.
+4. No adjuntes el módulo ni el archivo JSON ni los tests. Si pide archivos, **registra esa solicitud sin proporcionarlos**.
+5. Guarda la respuesta completa y su resumen de Estado, Evidencia y Pendientes.
 
-1. Inicia una conversación **nueva** en [Claude Web](https://claude.ai/).
-2. Selecciona, si está disponible, la misma familia y versión de modelo que usarás en Claude Code.
-3. No selecciones proyectos con contexto, no adjuntes archivos ni conectes el repositorio.
-4. Abre [prompts/claude-web.md](prompts/claude-web.md); copia **todo el contenido**, incluida la función Python.
-5. Envíalo y conserva la respuesta.
-6. Si solicita aclaraciones, regístralas; **no reveles el contrato de negocio**.
-7. No transfieras aún la propuesta a la carpeta de práctica.
+Observa si distingue una prueba en su entorno ficticio/aislado de la ejecución **del proyecto real**. Un asistente cuidadoso puede declarar el resultado **incompleto** por falta de dependencias.
 
-Observa si Claude Web identifica correctamente que desconoce el formato de identificadores permitido. Si propone una solución, no presupongas que cumple las reglas internas que nunca recibió.
+## Condición B: Claude Code
 
-## 8. Condición B: Claude Code en el repositorio
+En PowerShell:
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
 code .
 ~~~
 
-En la terminal integrada de VS Code:
+En la terminal integrada:
 
 ~~~powershell
 Get-Location
 git rev-parse --show-toplevel
 git --no-pager diff -- src/records.py tests/test_records.py
-~~~
-
-El directorio debe ser C:\Evolium\webinar-experiment-01-live. El diff inicial debe estar vacío.
-
-Inicia **una sesión nueva**:
-
-~~~powershell
 claude
 ~~~
 
-Abre [prompts/claude-code.md](prompts/claude-code.md), copia **todo el contenido** y envíalo. No pegues manualmente las reglas de negocio.
+Abre **[prompts/claude-code.md](prompts/claude-code.md)** y envía exactamente su contenido a una **sesión nueva** de Claude Code. No adjuntes ni pegues manualmente los documentos o la política.
 
-Observa si el agente consulta:
-
-- AGENTS.md y CLAUDE.md;
-- NEXT_TASK.md;
+Observa si Claude Code lee:
+- AGENTS.md, CLAUDE.md y NEXT_TASK.md;
+- src/customer_policy.py y config/customer_policy.json;
 - docs/CONTRATO_IDENTIFICADOR_CLIENTE.md;
-- src/records.py y tests/test_records.py.
+- los tests existentes.
 
-Autoriza lectura, cambios en los archivos del ejercicio y pruebas. **No permitas commits ni pushes**.
+Autoriza lectura, cambios y pruebas **solo en la copia de práctica**. No permitas commits ni pushes.
 
-## 9. Verificar independientemente
+## Verificación independiente
 
-Cuando Claude Code termine, sal con /exit y ejecuta:
+Sal de Claude Code con /exit y ejecuta:
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
@@ -153,27 +137,25 @@ git status --short
 git log -1 --oneline
 ~~~
 
-El resultado correcto es **todas las pruebas PASS**, con cambios acotados a la tarea. El número final puede ser mayor de 11 si el agente añade pruebas.
+**Objetivo:** todas las pruebas PASS. Comprueba además que el agente no haya sustituido el archivo de configuración por constantes inventadas. La prueba de cambio dinámico de política detecta soluciones que ignoran la configuración real.
 
-Solo ahora abre el contrato de negocio y revisa si se cumplieron sus criterios. Si Claude Code no lo consultó o falló, eso también es un resultado válido que debes registrar.
+La prueba de política ausente exige un error explícito (FileNotFoundError), no un valor predeterminado.
 
-## 10. Conclusión
+## Interpretación
 
-Completa la [bitácora](BITACORA.md). Compara **suposiciones**, **normas consultadas**, **archivos realmente modificados** y **pruebas realmente ejecutadas**.
+Registra los resultados en [BITACORA.md](BITACORA.md). Compara qué archivos podía inspeccionar cada modalidad, qué supuestos hizo, qué pudo ejecutar y qué dejó pendiente.
 
-**Conclusión posible:** los estándares del proyecto y la verificación automatizada permiten evaluar la compatibilidad de una solución con reglas internas no visibles en un fragmento aislado.
+**Conclusión válida:** sin los archivos requeridos, una solución puede ser plausible pero no puede verificarse como compatible con el proyecto empresarial. Con acceso al repositorio, el agente puede comprobar esa compatibilidad. Esto no garantiza que lo haga correctamente ni significa que Claude Web no sepa programar.
 
-**Límite:** este experimento no demuestra que Claude Web sea incapaz de programar ni que su propuesta rompería el sistema. Para medir esa afirmación, tendríamos que aplicar y evaluar su propuesta en una copia independiente de la misma línea base.
+## Restaurar para presentar de nuevo
 
-## 11. Restaurar para repetir la presentación
-
-**Advertencia:** este script descarta los cambios locales del ejercicio.
+**Descarta los cambios hechos en la copia temporal:**
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
 .\scripts\reset-demo.ps1
 ~~~
 
-El estado vuelve a la plantilla empresarial con **8 PASS y 3 FAIL intencionales**.
+La línea base vuelve a **9 PASS y 5 FAIL intencionales**.
 
-[Prompt Claude Web](prompts/claude-web.md) | [Prompt Claude Code](prompts/claude-code.md) | [Bitácora](BITACORA.md) | [Experimento 02](../02-bank-document-to-orion/README.md)
+[Prompt Web](prompts/claude-web.md) | [Prompt Code](prompts/claude-code.md) | [Bitácora](BITACORA.md) | [Experimento 02](../02-bank-document-to-orion/README.md)

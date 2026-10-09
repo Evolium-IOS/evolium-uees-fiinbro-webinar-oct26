@@ -1,56 +1,46 @@
-# Bitácora del Experimento 01
+# Bitácora: dependencia obligatoria y contexto de ingeniería
 
-## Pregunta
+## Pregunta e hipótesis
 
-¿Permite el contexto documentado de un repositorio identificar y respetar normas que no aparecen en una función de Python aislada?
+**Pregunta:** ¿qué ocurre cuando una función necesita un archivo de política local que Claude Web no recibe y Claude Code sí puede consultar?
 
-## Hipótesis
+**Hipótesis:** el acceso a los archivos reales permite resolver y verificar la tarea dentro del proyecto; sin ellos el resultado integrado no es verificable.
 
-El agente dentro del repositorio puede consultar el contrato de negocio y verificar sus cambios; el cliente web que solo recibe un fragmento no conoce los criterios empresariales específicos.
-
-## Condiciones
+## Condiciones iniciales
 
 - Fecha:
 - Modelo Claude Web:
 - Modelo Claude Code:
-- ¿Se usaron los dos prompts documentados, sin modificaciones?: Sí / No
-- ¿Claude Web estaba en una conversación nueva sin archivos adjuntos?: Sí / No
-- ¿Claude Code inició una sesión nueva con la línea base actualizada?: Sí / No
-- ¿Se dieron aclaraciones o pistas adicionales?: Sí / No
-- Desviaciones:
+- ¿Web inició conversación nueva sin proyecto ni archivos adicionales?: Sí / No
+- ¿Code inició sesión nueva dentro de la copia temporal?: Sí / No
+- ¿Ambos recibieron los prompts del repositorio sin pistas extras?: Sí / No
+- ¿La copia temporal partió de la última plantilla?: Sí / No
 
-## Evidencia por condición
+## Resultados
 
-| Observación | Claude Web | Claude Code |
+| Evidencia | Claude Web | Claude Code |
 | --- | --- | --- |
-| ¿Qué información tuvo disponible? | Código pegado | Repositorio completo |
-| ¿Preguntó por reglas de negocio? | | |
-| ¿Qué supuso sobre identificadores válidos? | | |
-| ¿Consultó el contrato empresarial? | No disponible | |
-| ¿Qué propuso o modificó? | | |
-| ¿Ejecutó pruebas? ¿Dónde? | | |
-| ¿Probó formatos específicos y el ID reservado? | No se informaron en el prompt | |
-| ¿Revisó un diff del Git local? | | |
-| ¿Qué intervención humana hizo falta? | | |
+| ¿Detectó dependencia en src/customer_policy.py? | | |
+| ¿Tuvo acceso al JSON config/customer_policy.json? | No | |
+| ¿Tuvo acceso al contrato de negocio? | No | |
+| ¿Inventó reglas o solicitó los archivos faltantes? | | |
+| ¿Trabajó con el código real o con una reconstrucción aislada? | | |
+| ¿El archivo de política se usó durante la ejecución? | | |
+| ¿Qué pruebas ejecutó y en qué entorno? | | |
+| ¿Cuál fue su estado final declarado? | | |
+| ¿Qué evidencia y qué pendientes reconoció? | | |
+| ¿Cambió el Git local de práctica? | No | |
 
-## Verificación independiente del proyecto
+## Verificación independiente
 
-- Línea base esperada: 8 PASS y 3 FAIL (11 pruebas).
-- Resultado después del agente: ____ PASS y ____ FAIL.
+- Línea base: **14 pruebas: 9 PASS / 5 FAIL intencionales**.
+- Pruebas posteriores a Claude Code: _____ PASS / _____ FAIL.
+- ¿La política ausente produce FileNotFoundError?: Sí / No.
+- ¿La lista de exclusiones se lee del JSON vigente?: Sí / No.
+- ¿El diff preserva las dependencias del proyecto?: Sí / No.
 - git diff --check: PASS / FAIL.
-- ¿La solución respeta docs/CONTRATO_IDENTIFICADOR_CLIENTE.md?: Sí / No / No comprobado.
-- ¿Se preservan firma, orden, datos de entrada y montos cero?: Sí / No / No comprobado.
-- ¿Se hizo commit de la solución?: Sí / No.
-- Evidencia o capturas:
-
-## Interpretación
-
-1. ¿Claude Web pidió las reglas que no recibió o las supuso?
-2. ¿Claude Code encontró y utilizó la documentación del negocio antes de editar?
-3. ¿Qué pruebas habrían quedado fuera de una solución basada únicamente en el fragmento pegado?
-4. ¿Cuál es la diferencia entre una función plausible y un cambio verificable en un proyecto?
-5. ¿Qué conclusiones no se pueden extraer de una sola ejecución?
+- ¿Se realizaron commits o pushes de la solución?: Sí / No.
 
 ## Conclusión
 
-Atribuye las diferencias al contexto y las herramientas disponibles **solo en la medida en que las observaciones lo respalden**. No afirmes que el cliente web necesariamente falló sin haber probado su solución contra el contrato.
+No equipares tests ejecutados contra stubs creados por un asistente a tests ejecutados contra el proyecto real. No afirmes que el cliente web no puede escribir código: sin la política, no puede demostrar compatibilidad con estas reglas locales.

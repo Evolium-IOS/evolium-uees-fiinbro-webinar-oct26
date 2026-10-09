@@ -1,46 +1,34 @@
-# Bitácora: dependencia obligatoria y contexto de ingeniería
+# Experimento 01: observación y conclusión
 
-## Pregunta e hipótesis
+**Pregunta:** ¿puede considerarse correcta una modificación generada por IA si no ha sido contrastada con la configuración y las pruebas reales del proyecto?
 
-**Pregunta:** ¿qué ocurre cuando una función necesita un archivo de política local que Claude Web no recibe y Claude Code sí puede consultar?
+**Hipótesis:** el acceso al repositorio permite encontrar dependencias y criterios que no aparecen en el fragmento pegado a un chat.
 
-**Hipótesis:** el acceso a los archivos reales permite resolver y verificar la tarea dentro del proyecto; sin ellos el resultado integrado no es verificable.
+## Evidencia disponible
 
-## Condiciones iniciales
-
-- Fecha:
-- Modelo Claude Web:
-- Modelo Claude Code:
-- ¿Web inició conversación nueva sin proyecto ni archivos adicionales?: Sí / No
-- ¿Code inició sesión nueva dentro de la copia temporal?: Sí / No
-- ¿Ambos recibieron los prompts del repositorio sin pistas extras?: Sí / No
-- ¿La copia temporal partió de la última plantilla?: Sí / No
-
-## Resultados
-
-| Evidencia | Claude Web | Claude Code |
+| | Claude Web | Claude Code (versión con JSON obligatorio) |
 | --- | --- | --- |
-| ¿Detectó dependencia en src/customer_policy.py? | | |
-| ¿Tuvo acceso al JSON config/customer_policy.json? | No | |
-| ¿Tuvo acceso al contrato de negocio? | No | |
-| ¿Inventó reglas o solicitó los archivos faltantes? | | |
-| ¿Trabajó con el código real o con una reconstrucción aislada? | | |
-| ¿El archivo de política se usó durante la ejecución? | | |
-| ¿Qué pruebas ejecutó y en qué entorno? | | |
-| ¿Cuál fue su estado final declarado? | | |
-| ¿Qué evidencia y qué pendientes reconoció? | | |
-| ¿Cambió el Git local de práctica? | No | |
+| Acceso al proyecto y `config/customer_policy.json` | No | Sí, si trabaja en la copia actualizada |
+| Solución presentada | Aceptó strings no vacíos y enteros como IDs; omitió `load_customer_policy()` | Pendiente |
+| Pruebas reportadas | 2 pruebas creadas en entorno aislado; ambas pasaron | Pendiente |
+| Pruebas de este repositorio ejecutadas | No | Pendiente |
+| Estado | Verificado solo en su entorno aislado; **no en el proyecto** | Pendiente |
 
-## Verificación independiente
+**Nota de trazabilidad:** la respuesta de Claude Web fue compartida en la sesión de trabajo. No consta verificación independiente de que haya utilizado exactamente el último prompt publicado con el import de política; no se debe convertir esta observación en una afirmación de incumplimiento deliberado.
 
-- Línea base: **14 pruebas: 9 PASS / 5 FAIL intencionales**.
-- Pruebas posteriores a Claude Code: _____ PASS / _____ FAIL.
-- ¿La política ausente produce FileNotFoundError?: Sí / No.
-- ¿La lista de exclusiones se lee del JSON vigente?: Sí / No.
-- ¿El diff preserva las dependencias del proyecto?: Sí / No.
-- git diff --check: PASS / FAIL.
-- ¿Se realizaron commits o pushes de la solución?: Sí / No.
+## Conclusión observada
 
-## Conclusión
+**La solución web fue plausible, pero no estuvo validada contra las reglas del sistema.** El asistente declaró explícitamente que había supuesto qué era un identificador válido y que no conocía el código ni las pruebas reales.
 
-No equipares tests ejecutados contra stubs creados por un asistente a tests ejecutados contra el proyecto real. No afirmes que el cliente web no puede escribir código: sin la política, no puede demostrar compatibilidad con estas reglas locales.
+El experimento muestra por qué **las dependencias, los contratos de negocio y las pruebas del proyecto son parte de la definición de “terminado”**. No demuestra inferioridad del modelo web ni, todavía, que Claude Code haya superado el ensayo actualizado.
+
+## Verificación final pendiente
+
+- Línea base esperada: **14 pruebas, 9 PASS y 5 FAIL** intencionales.
+- Claude Code: _____ pruebas PASS / _____ FAIL.
+- ¿Leyó `src/customer_policy.py` y `config/customer_policy.json`?: Sí / No.
+- ¿Conservó la carga dinámica del JSON?: Sí / No.
+- `git diff --check`: PASS / FAIL.
+- Evidencia: salida real y diff.
+
+[Guía y comandos](README.md)

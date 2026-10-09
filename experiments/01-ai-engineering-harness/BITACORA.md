@@ -1,56 +1,55 @@
-# Bitácora del Experimento 01
+# Bitácora: experimento controlado de IA e ingeniería
 
-Completa esta ficha después de ejecutar el cliente web y el agente en VS Code. Puedes copiarla a tu propio documento o completarla en tu fork.
+## Pregunta e hipótesis
 
-## Pregunta
+**Pregunta:** ¿qué aporta un entorno de ingeniería cuando dos asistentes reciben la misma tarea y documentación técnica?
 
-¿Qué cambia cuando usamos IA desde un cliente web sin acceso al repositorio frente a un agente que puede consultar instrucciones, ejecutar pruebas y revisar cambios?
+**Hipótesis:** con acceso operativo a repositorio, pruebas y Git se facilita la verificación directa de cambios.
 
-## Hipótesis
-
-Con contexto persistente y herramientas de validación, esperamos obtener **un proceso más verificable y reproducible**.
-
-## Condiciones
+## Control inicial
 
 - Fecha:
-- Cliente web utilizado:
-- Agente utilizado en VS Code:
-- Proyecto Git (carpeta local):
-- Versión de Python:
-- ¿Se adjuntaron archivos al cliente web?: No
-- ¿Se habilitó acceso al repositorio en el cliente web?: No
+- Modelo de Claude Web (nombre/versión visible):
+- Modelo de Claude Code (nombre/versión visible):
+- ¿Se utilizó el mismo mensaje de prompts/mensaje-unico.md?: Sí / No
+- ¿Se adjuntó contexto-web.md completo a Claude Web?: Sí / No
+- ¿El agente partió del tag demo-baseline?: Sí / No
+- ¿Se habilitaron herramientas de ejecución adicionales en Claude Web?: Sí / No
+- Desviaciones del procedimiento:
 
 ## Observaciones
 
-| Pregunta | Cliente web | Agente en VS Code |
+| Pregunta | Claude Web | Claude Code |
 | --- | --- | --- |
-| ¿Qué contexto recibió? | | |
-| ¿Qué asumió que no estaba definido? | | |
-| ¿Qué solución propuso o implementó? | | |
-| ¿Qué archivos se modificaron? | No aplica, salvo acción manual | |
-| ¿Se ejecutaron pruebas? | No, solo sugeridas, salvo herramientas habilitadas | |
-| ¿Cuántas pruebas pasaron y fallaron? | No verificado en este entorno | |
-| ¿Existe un diff revisable? | No, salvo trabajo manual | |
-| ¿Qué evidencia conservarías? | | |
+| ¿Qué archivos o instrucciones consultó? | | |
+| ¿Cumplió el criterio de customer_id? | | |
+| ¿Qué cambio propuso o aplicó? | | |
+| ¿Añadió pruebas? | | |
+| ¿Editó el proyecto local? | | |
+| ¿Ejecutó las pruebas del repositorio? | | |
+| ¿Mostró un diff real? | | |
+| ¿Qué verificó efectivamente? | | |
+| ¿Qué intervención manual fue necesaria? | | |
 
-## Verificación técnica
+## Evidencia técnica
 
-- Pruebas en baseline: _____ pasan / _____ fallan.
-- Pruebas después del agente: _____ pasan / _____ fallan.
-- `git diff --check`: PASS / FAIL.
-- ¿`customer_id` es un string no vacío?: Sí / No / Incierto.
-- ¿Se conservó el orden?: Sí / No / Incierto.
-- ¿Se conservaron los datos originales?: Sí / No / Incierto.
-- ¿El alcance del diff fue apropiado?: Sí / No / Incierto.
+- Línea base: _____ pruebas pasan, _____ fallan.
+- Después de Claude Code: _____ pruebas pasan, _____ fallan.
+- Revisión independiente de git diff --check: PASS / FAIL.
+- ¿Claude Web entregó un parche aplicable?: Sí / No.
+- ¿Se aplicó ese parche a una copia limpia y se ejecutó la misma suite?: Sí / No.
+- Si se ejecutó, resultado: _____ pasan, _____ fallan.
+- Archivos cambiados:
+- Capturas o registro de salida:
 
 ## Interpretación
 
-1. ¿Qué pudo resolver el cliente web?
-2. ¿Qué criterios faltaban en el mensaje de la primera ejecución?
-3. ¿Qué aportaron `NEXT_TASK.md`, `AGENTS.md` y las pruebas?
-4. ¿Qué demostraría mejor la hipótesis? ¿Qué mediciones adicionales harían falta?
-5. ¿Qué harías diferente si el proyecto fuera de producción?
+1. ¿En cuál condición se observó lectura efectiva de las instrucciones de proyecto?
+2. ¿La calidad funcional del código pudo compararse con las mismas pruebas? ¿Por qué?
+3. ¿Qué parte del proceso exigió intervención manual?
+4. ¿Qué evidencias permiten afirmar que un cambio fue comprobado?
+5. ¿Qué resultados **no** podemos concluir a partir de una sola demostración?
 
-## Conclusión
+## Conclusión basada en datos
 
-Escribe una conclusión basada en lo observado. No conviertas una sola ejecución en una afirmación universal sobre modelos, tokens o productividad.
+Describe lo observado sin afirmar que un modelo es universalmente superior o que la ingeniería garantiza resultados correctos.

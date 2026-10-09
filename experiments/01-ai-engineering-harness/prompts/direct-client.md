@@ -1,35 +1,9 @@
-# Prompt para cliente conversacional
+# Claude Web: instrucción de la ejecución
 
-Usar en una conversación nueva.
+1. Inicia una conversación nueva en [Claude Web](https://claude.ai/).
+2. Adjunta el archivo [contexto-web.md](contexto-web.md), que incluye los mismos cinco archivos de la línea base del repositorio.
+3. Copia y envía exactamente el mensaje de [mensaje-unico.md](mensaje-unico.md).
+4. No concedas acceso al repositorio local ni a la terminal.
+5. Conserva la respuesta para analizarla y registrarla en [la bitácora](../BITACORA.md).
 
----
-
-Tengo esta función:
-
-```python
-def select_processable_records(records):
-    return [
-        dict(record)
-        for record in records
-        if record.get("status") == "ready"
-    ]
-```
-
-Cada registro puede contener `customer_id`, `email`, `amount` y `status`.
-
-Necesito que los registros sin un `customer_id` válido no lleguen al resultado.
-
-Restricciones:
-- conserva la firma pública;
-- conserva el orden;
-- no mutes los registros de entrada;
-- conserva el comportamiento existente para registros válidos;
-- usa solamente la biblioteca estándar de Python.
-
-Propone el cambio y las pruebas que agregarías.
-
----
-
-## Nota para la presentación
-
-No dar acceso secreto al repositorio o terminal. El objetivo es mostrar que el contexto disponible es exactamente el que se proporcionó.
+**No uses el prompt antiguo:** aquel solo compartía la función y no incluía los criterios del proyecto. Esta versión corrige esa desigualdad de información.

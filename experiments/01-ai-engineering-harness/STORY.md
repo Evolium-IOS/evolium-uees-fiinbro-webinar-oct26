@@ -1,62 +1,58 @@
-# Guion para presentar el Experimento 01
+# Guion del Experimento 01
 
-Este archivo es una guía de exposición. Para reproducir el ejercicio desde cero, sigue [README.md](README.md).
+La demostración tiene dos condiciones con **igual tarea, mensaje y material técnico inicial**. Cambia el acceso operativo al entorno del proyecto.
 
-**Duración objetivo: 4 a 5 minutos.**
+**Duración objetivo: 4 a 5 minutos.** Los estudiantes pueden repetir todos los pasos en [README.md](README.md).
 
-## 0:00 a 0:40 | Pregunta e hipótesis
+## 0:00 a 0:45 | Pensar como investigador
 
-**Pantalla:** presentación del webinar con la pregunta del experimento.
+**Pregunta:** ¿qué aporta un entorno de ingeniería si el asistente conoce la misma tarea y tiene disponible la misma documentación?
 
-> “Como investigadores, primero vamos a plantear una pregunta: ¿qué cambia cuando usamos una IA en un chat y cuando la integramos a nuestro entorno de ingeniería?”
+**Hipótesis:** el acceso a archivos, terminal, pruebas y Git facilita producir evidencia verificable, no solo código plausible.
 
-> “Mi hipótesis no es que un modelo sea más inteligente. Es que al darle reglas persistentes, acceso al proyecto, pruebas y control de versiones, podemos comprobar mejor lo que realmente hizo.”
+> “No vamos a comparar cuál IA es más inteligente. Vamos a comparar qué sucede cuando la misma IA puede operar dentro del proyecto y demostrar su resultado.”
 
-## 0:40 a 1:40 | Cliente web
+## 0:45 a 1:50 | Condición A: Claude Web
 
-**Pantalla:** Claude Web, conversación nueva, sin archivos ni repositorio conectado.
+**Pantalla:** conversación nueva en Claude Web.
 
-Usa [prompts/direct-client.md](prompts/direct-client.md).
+Adjunta [prompts/contexto-web.md](prompts/contexto-web.md), que reúne el contenido de los cinco archivos iniciales.
 
-> “Este es un problema sencillo. Tengo una función que filtra registros, pero deja pasar uno sin identificador válido.”
+Envía el [mensaje único](prompts/mensaje-unico.md).
 
-Después de mostrar la propuesta:
+> “Ahora sí le dimos al chat las reglas, el código y las pruebas. No le estamos ocultando el criterio para que falle.”
 
-> “Observemos algo: ¿tuvo que asumir qué era un identificador válido? Aquí el modelo solo conoce lo que yo decidí compartir.”
+Observa el resultado y pregunta:
 
-No critiques la respuesta como incorrecta solo por hacer una suposición. Señala la ambigüedad del contexto.
+> “¿La propuesta puede ser correcta? Sí. ¿Nos consta que se aplicó y pasó las pruebas locales? Todavía no.”
 
-## 1:40 a 3:50 | Harness en VS Code
+## 1:50 a 3:55 | Condición B: Claude Code en VS Code
 
-**Pantalla:** VS Code, terminal dentro de `C:\Evolium\webinar-experiment-01-live`.
+**Pantalla:** VS Code con terminal en C:\Evolium\webinar-experiment-01-live.
 
-Mostrar:
-1. `NEXT_TASK.md`: objetivo.
-2. `AGENTS.md` y `CLAUDE.md`: reglas.
-3. `tests/test_records.py`: qué vamos a comprobar.
+1. Enseña los mismos archivos: NEXT_TASK.md, AGENTS.md, CLAUDE.md, src/records.py y tests/test_records.py.
+2. Ejecuta línea base: 7 PASS, 1 FAIL intencional.
+3. Inicia claude en esa misma terminal.
+4. Pega el **mismo mensaje único**.
+5. Observa que consulta documentos, modifica archivos y ejecuta pruebas.
+6. Comprueba por separado los resultados y muestra git diff.
 
-Ejecutar las pruebas de línea base para mostrar **7 PASS y 1 FAIL intencional**.
+> “La tarea no cambió. Aquí el asistente pudo leer los documentos directamente desde el repositorio, intervenir sobre el código y mostrar evidencia del cambio.”
 
-Abrir Claude Code en esa misma terminal, dar la instrucción de [prompts/claude-code.md](prompts/claude-code.md), y mostrar la ejecución.
+Si falla o tarda demasiado, no inventes una ejecución exitosa: explica lo observado y utiliza evidencia verificada de ensayo como respaldo, indicando que corresponde a un ensayo.
 
-> “No le di código pegado en un chat. Le di una tarea y acceso controlado a un repositorio que ya tiene reglas y pruebas.”
+## 3:55 a 4:45 | Evidencia y conclusión
 
-Cuando termine, mostrar resultado real de las pruebas y `git diff`.
+Compara el contenido de las respuestas y, por separado, la posibilidad de comprobarlas.
 
-Si la respuesta tarda o falla, no improvises: muestra los criterios y la evidencia de una ejecución previamente preparada, y continúa.
+> “Ambos tienen la información del problema. Lo que cambia es la integración del trabajo con archivos, pruebas, herramientas y control de versiones.”
 
-## 3:50 a 4:40 | Resultado y límites
+> “La ingeniería sigue siendo necesaria para establecer los criterios de aceptación, diseñar la validación y decidir si un cambio puede considerarse confiable.”
 
-**Pantalla:** presentación o terminal con resumen de pruebas.
+**Límite:** no afirmes superioridad universal, ahorro de tokens ni calidad funcional comparada si no se probó la propuesta web contra el mismo suite.
 
-> “El chat puede proponer la misma solución. La diferencia que estamos observando es el entorno: instrucciones, código, validación y evidencia.”
-
-> “Esto no prueba que automáticamente gastemos menos tokens. Muestra cómo dejar menos decisiones ambiguas y cómo comprobar resultados con el proyecto real.”
-
-**Transición:**
-
-> “Ya vimos cómo cambia la forma de construir. Ahora vamos a ver qué ocurre cuando un experimento técnico revela un problema operativo más grande.”
+**Transición:** “Si esto es importante en una función pequeña, pensemos qué pasa cuando trabajamos con documentos bancarios y decisiones reales.”
 
 ## Después del webinar
 
-Los estudiantes pueden repetir el ejercicio usando la [guía paso a paso](README.md), registrar sus resultados en [BITACORA.md](BITACORA.md) y restaurar el estado inicial con el script de reset.
+Restablece el baseline con [reset-demo.ps1](scripts/reset-demo.ps1) y registra resultados en [BITACORA.md](BITACORA.md).

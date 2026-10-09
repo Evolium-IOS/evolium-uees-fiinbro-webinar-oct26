@@ -2,28 +2,29 @@
 
 ## Antes del webinar
 
-- Presentación del webinar autenticada y abierta.
-- **Claude Web** abierto en el navegador con conversación nueva, sin adjuntos ni conexión al repositorio de práctica.
-- VS Code abierto solo en `C:\Evolium\webinar-experiment-01-live`.
-- Terminal integrada de VS Code abierta en la misma ruta, con Claude Code disponible.
-- Codex disponible como alternativa, sin ejecutarlo simultáneamente.
-- Experimento 01 restaurado al tag `demo-baseline`.
-- Línea base comprobada: 7 pruebas pasan y 1 falla intencionalmente.
-- Guion y prompts disponibles para copiar.
-- UI del extractor bancario en localhost, abierta previamente.
+- Presentación autenticada y abierta.
+- Claude Web abierto en una conversación nueva sin proyecto ni herramientas locales conectadas.
+- Archivo contexto-web.md preparado para adjuntar (misma información inicial que el repositorio).
+- Mensaje único preparado; no usar prompts diferentes entre condiciones.
+- Misma familia y versión del modelo seleccionada en ambos clientes si está disponible; registrar cualquier diferencia.
+- VS Code abierto únicamente en C:\Evolium\webinar-experiment-01-live.
+- Terminal integrada en el directorio correcto, con Claude Code disponible.
+- Codex disponible solo como alternativa documentada.
+- Baseline restaurado: 7 PASS y 1 FAIL intencional.
+- UI del extractor bancario abierta en localhost antes de la sección.
 - PDF de prueba seguro preparado.
-- Credenciales cargadas sin mostrar valores en pantalla.
-- Terminal con fuente grande y ventanas ya ordenadas.
-- Notificaciones desactivadas.
-- Capturas o evidencia de respaldo para las dos demostraciones.
+- Credenciales configuradas, pero ocultas en pantalla.
+- Fuente de terminal grande, notificaciones desactivadas y ventanas organizadas.
+- Evidencia real de ensayo disponible si alguna ejecución tarda o falla.
 
 ## Durante el webinar
 
-- Formular la pregunta e hipótesis antes de ejecutar cada prueba.
-- No mostrar archivos `.env`, claves API ni documentos con datos personales.
+- Mostrar pregunta e hipótesis antes de cualquier prueba.
+- Claude Web recibe el mismo mensaje y contenido inicial en documento adjunto.
+- Claude Code recibe el mismo mensaje y debe consultar los archivos locales.
+- No modificar manualmente el código durante la demostración.
 - No instalar dependencias en vivo.
-- No escribir código manualmente.
-- Ejecutar un solo agente en el Experimento 01.
-- Mostrar evidencia: pruebas y diff, no solo una respuesta verbal del agente.
-- Si una demo falla o tarda, pasar al material de respaldo.
-- Mantener cada experimento cerca de cinco minutos.
+- Mostrar pruebas realmente ejecutadas y el diff del repositorio.
+- No afirmar haber ejecutado pruebas del parche web si no ocurrió.
+- No mostrar archivos .env, claves API, credenciales o documentos bancarios privados.
+- Mantener cada demostración cerca de cinco minutos.

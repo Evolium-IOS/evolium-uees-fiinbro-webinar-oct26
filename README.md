@@ -1,33 +1,37 @@
-# Experimentos del Webinar UEES × FIINBRO — Octubre 2026
+# Experimentos del webinar UEES × FIINBRO, octubre 2026
 
-Material práctico para el webinar **“De Ingenieros a Investigadores: cómo la IA está redefiniendo el futuro de los datos y el desarrollo de software.”**
+Material práctico para **De Ingenieros a Investigadores: cómo la IA está redefiniendo el futuro de los datos y el desarrollo de software**.
 
-Este repositorio está organizado para que cada experimento pueda:
-- presentarse en vivo;
-- ensayarse de forma repetible;
-- replicarse después por los estudiantes;
-- explicar no solo *qué* se construyó, sino *por qué* y *cómo se valida*.
+Cada experimento está pensado para que puedas **seguir las instrucciones, ejecutar las pruebas, observar resultados y repetir el ejercicio**. El repositorio también incluye el guion breve del presentador.
 
-## Experimentos
+## Comienza por aquí
 
-### 01 — IA dentro del entorno de ingeniería
-Compara una conversación normal con un asistente de IA frente a un agente de código que trabaja dentro de un repositorio con instrucciones persistentes, código, pruebas, Git y terminal.
+### [Experimento 01: IA dentro del entorno de ingeniería](experiments/01-ai-engineering-harness/README.md)
 
-**Idea central:** el modelo importa, pero el sistema alrededor del modelo también.
+**Pregunta:** ¿Qué cambia cuando la IA responde a una consulta aislada frente a cuando puede trabajar dentro de un repositorio con contexto, instrucciones y pruebas?
 
-### 02 — De documentos bancarios a un sistema operativo
-Muestra un experimento real de extracción y validación de datos desde estados de cuenta bancarios, y cómo ese tipo de investigación revela problemas más amplios de reglas, contexto, revisión humana, flujo operativo y gobernanza.
+Sigue la guía desde la pregunta y la hipótesis hasta la ejecución en Claude Web, el uso de Claude Code en VS Code, la comparación de resultados y el restablecimiento del experimento.
 
-**Idea central:** extraer el dato es solo el comienzo.
+[Guion de la presentación](experiments/01-ai-engineering-harness/STORY.md) | [Hoja de resultados](experiments/01-ai-engineering-harness/BITACORA.md)
+
+### [Experimento 02: de un documento bancario a un sistema](experiments/02-bank-document-to-orion/README.md)
+
+**Pregunta:** ¿Qué hace falta para convertir una extracción de datos desde un PDF en información confiable para una operación real?
+
+El segundo experimento incluye la aplicación Streamlit, muestras de PDF, preparación del entorno y una guía de reproducción. Se relaciona con ORION mediante preguntas de ingeniería, validación y gobernanza. No implica que el extractor sea el mismo sistema que ORION.
+
+[Guía de estudiantes](experiments/02-bank-document-to-orion/GUIA_ESTUDIANTE.md)
+
+## Requisitos generales
+
+- Git instalado.
+- Visual Studio Code y terminal.
+- Python para el Experimento 01; entorno con dependencias y clave API para ejecutar la extracción real en el Experimento 02.
+- Acceso a Claude Web para la primera parte del Experimento 01.
+- Claude Code o Codex para la segunda parte del Experimento 01.
 
 ## Seguridad
 
-No subas:
-- claves API;
-- archivos `.env`;
-- credenciales;
-- documentos bancarios privados;
-- información personal real;
-- secretos de producción.
+Este repositorio es público. Nunca subas claves API, archivos `.env`, credenciales, documentos bancarios privados, datos personales reales ni secretos de producción.
 
-Consulta `PRESENTER_RUNBOOK.md` para el orden de presentación.
+[Guía del presentador](PRESENTER_RUNBOOK.md) | [Lista de ensayo](shared/REHEARSAL_CHECKLIST.md)

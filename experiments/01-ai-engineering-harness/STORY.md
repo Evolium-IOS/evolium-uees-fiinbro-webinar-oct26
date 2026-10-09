@@ -1,45 +1,62 @@
-# Guion — Experimento 01
+# Guion para presentar el Experimento 01
 
-## Apertura
+Este archivo es una guía de exposición. Para reproducir el ejercicio desde cero, sigue [README.md](README.md).
 
-> “Voy a darle exactamente el mismo problema a la IA de dos maneras distintas.”
+**Duración objetivo: 4 a 5 minutos.**
 
-## Parte A — Cliente conversacional
+## 0:00 a 0:40 | Pregunta e hipótesis
 
-Usar `prompts/direct-client.md`.
+**Pantalla:** presentación del webinar con la pregunta del experimento.
 
-Preguntar al público:
+> “Como investigadores, primero vamos a plantear una pregunta: ¿qué cambia cuando usamos una IA en un chat y cuando la integramos a nuestro entorno de ingeniería?”
 
-> “¿Qué necesita saber la IA antes de poder trabajar correctamente con este proyecto?”
+> “Mi hipótesis no es que un modelo sea más inteligente. Es que al darle reglas persistentes, acceso al proyecto, pruebas y control de versiones, podemos comprobar mejor lo que realmente hizo.”
 
-Explicar que el cliente solo conoce el contexto que proporcionamos explícitamente. Eso no es un defecto; es el comportamiento esperado de un cliente sin acceso al repositorio y sus herramientas.
+## 0:40 a 1:40 | Cliente web
 
-## Parte B — Harness de ingeniería
+**Pantalla:** Claude Web, conversación nueva, sin archivos ni repositorio conectado.
 
-Mostrar en este orden:
-1. `NEXT_TASK.md` — qué hay que resolver.
-2. `AGENTS.md` / `CLAUDE.md` — reglas persistentes.
-3. `src/records.py` — implementación.
-4. `tests/test_records.py` — criterios ejecutables.
-5. Ejecutar pruebas — una falla.
-6. Abrir Claude Code **o** Codex.
-7. Pegar el prompt corto.
-8. Dejar que inspeccione, modifique y pruebe.
-9. Mostrar todas las pruebas pasando.
-10. Mostrar `git diff`.
+Usa [prompts/direct-client.md](prompts/direct-client.md).
 
-## Frase clave
+> “Este es un problema sencillo. Tengo una función que filtra registros, pero deja pasar uno sin identificador válido.”
 
-> “No es que el chat no pueda resolverlo. La diferencia es que aquí el contexto, las reglas, el código, las pruebas y la evidencia ya forman parte del entorno de trabajo.”
+Después de mostrar la propuesta:
 
-## Contexto y eficiencia
+> “Observemos algo: ¿tuvo que asumir qué era un identificador válido? Aquí el modelo solo conoce lo que yo decidí compartir.”
 
-No decir que un harness siempre consume menos tokens.
+No critiques la respuesta como incorrecta solo por hacer una suposición. Señala la ambigüedad del contexto.
 
-Decir:
+## 1:40 a 3:50 | Harness en VS Code
 
-> “No estoy optimizando solo tokens. Estoy reduciendo contexto repetido, reexplicación y trabajo que no puedo comprobar.”
+**Pantalla:** VS Code, terminal dentro de `C:\Evolium\webinar-experiment-01-live`.
 
-## Salida
+Mostrar:
+1. `NEXT_TASK.md`: objetivo.
+2. `AGENTS.md` y `CLAUDE.md`: reglas.
+3. `tests/test_records.py`: qué vamos a comprobar.
 
-> “Ya vimos cómo cambia la forma de construir. Ahora veamos cómo un experimento técnico puede revelar un problema operativo mucho más grande.”
+Ejecutar las pruebas de línea base para mostrar **7 PASS y 1 FAIL intencional**.
+
+Abrir Claude Code en esa misma terminal, dar la instrucción de [prompts/claude-code.md](prompts/claude-code.md), y mostrar la ejecución.
+
+> “No le di código pegado en un chat. Le di una tarea y acceso controlado a un repositorio que ya tiene reglas y pruebas.”
+
+Cuando termine, mostrar resultado real de las pruebas y `git diff`.
+
+Si la respuesta tarda o falla, no improvises: muestra los criterios y la evidencia de una ejecución previamente preparada, y continúa.
+
+## 3:50 a 4:40 | Resultado y límites
+
+**Pantalla:** presentación o terminal con resumen de pruebas.
+
+> “El chat puede proponer la misma solución. La diferencia que estamos observando es el entorno: instrucciones, código, validación y evidencia.”
+
+> “Esto no prueba que automáticamente gastemos menos tokens. Muestra cómo dejar menos decisiones ambiguas y cómo comprobar resultados con el proyecto real.”
+
+**Transición:**
+
+> “Ya vimos cómo cambia la forma de construir. Ahora vamos a ver qué ocurre cuando un experimento técnico revela un problema operativo más grande.”
+
+## Después del webinar
+
+Los estudiantes pueden repetir el ejercicio usando la [guía paso a paso](README.md), registrar sus resultados en [BITACORA.md](BITACORA.md) y restaurar el estado inicial con el script de reset.

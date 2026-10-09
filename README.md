@@ -8,9 +8,9 @@ Cada experimento está pensado para que puedas **seguir las instrucciones, ejecu
 
 ### [Experimento 01: IA dentro del entorno de ingeniería](experiments/01-ai-engineering-harness/README.md)
 
-**Pregunta:** ¿Qué cambia cuando la IA responde a una consulta aislada frente a cuando puede trabajar dentro de un repositorio con contexto, instrucciones y pruebas?
+**Pregunta:** ¿Qué aporta un entorno de ingeniería cuando Claude Web y Claude Code reciben el mismo mensaje y la misma documentación inicial del proyecto?
 
-Sigue la guía desde la pregunta y la hipótesis hasta la ejecución en Claude Web, el uso de Claude Code en VS Code, la comparación de resultados y el restablecimiento del experimento.
+Sigue la guía desde la pregunta y la hipótesis hasta una comparación controlada con un mensaje único, el mismo contenido técnico en ambas interfaces, pruebas reales, Git y restauración del experimento.
 
 [Guion de la presentación](experiments/01-ai-engineering-harness/STORY.md) | [Hoja de resultados](experiments/01-ai-engineering-harness/BITACORA.md)
 

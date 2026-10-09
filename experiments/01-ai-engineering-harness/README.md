@@ -1,41 +1,40 @@
 # Experimento 01: la IA dentro de un entorno de ingeniería
 
-Esta guía permite **reproducir la comparación** usando el mismo problema, la misma información inicial y el mismo mensaje en dos formas de trabajo: Claude Web y Claude Code desde VS Code.
+**Sigue estos pasos para reproducir el experimento.** Trabajaremos con la misma tarea, el mismo mensaje y el mismo contenido técnico inicial en Claude Web y Claude Code.
 
 ## 1. Pregunta de investigación
 
-**¿Qué aporta un entorno de ingeniería cuando una IA recibe la misma tarea y dispone de la misma información, pero cambia su capacidad para inspeccionar, modificar y verificar el proyecto?**
-
-No estamos evaluando qué asistente es "más inteligente". Evaluamos la integración del razonamiento con un proceso de ingeniería verificable.
+**¿Qué aporta un entorno de ingeniería cuando una IA dispone de la misma tarea y documentación, pero cambia su capacidad para trabajar directamente con archivos, pruebas y Git?**
 
 ## 2. Hipótesis
 
-**Con los mismos requisitos y el mismo código inicial, la integración de una IA con archivos, terminal, pruebas y Git facilita producir evidencia directamente verificable de los cambios.**
+**La integración de la IA con el repositorio, la terminal y las pruebas facilita dejar evidencia directa y verificable de los cambios.**
 
-No se supone que el cliente web no pueda resolver el problema. Puede proponer un parche correcto. Lo que se investiga es la diferencia entre **proponer** e **implementar y comprobar** un cambio dentro de un sistema real.
+No buscamos demostrar que Claude Web sea incapaz de solucionar un problema ni que Claude Code use menos tokens. La comparación busca observar **cómo se pasa de una propuesta de código a un cambio aplicado y comprobado**.
 
-## 3. Control de variables
+## 3. Qué se mantiene igual y qué cambia
 
-| Variable | Claude Web en navegador | Claude Code en terminal de VS Code |
+| Condición | Claude Web | Claude Code |
 | --- | --- | --- |
-| Tarea y criterios | Los mismos | Los mismos |
-| Prompt | [Mensaje único](prompts/mensaje-unico.md) | El mismo mensaje |
-| Documentos y código inicial | [Contexto adjunto](prompts/contexto-web.md) con 5 archivos | Los mismos 5 archivos en el repositorio |
-| Modelo | Seleccionar la misma familia y versión, si está disponible | Registrar la versión real |
-| Cambios en archivos locales | No, entrega propuesta o parche | Sí, en la copia de práctica |
-| Pruebas locales y Git | No directamente, salvo herramientas que cambien la condición | Sí, mediante terminal |
+| Tarea y mensaje | Idénticos | Idénticos |
+| Información inicial | Cinco archivos adjuntos en un documento | Los mismos cinco archivos del repositorio |
+| Modelo | Misma familia y versión, si está disponible | Registrar versión utilizada |
+| Acceso al repositorio local | No | Sí |
+| Modificación de archivos locales | Propuesta o parche | Edición directa |
+| Ejecución de pruebas y Git locales | No directamente | Sí, mediante terminal |
 
-**Variable que queremos observar:** integración con el entorno local, acceso operativo a los archivos y posibilidad de comprobar el resultado.
+Usaremos solamente dos archivos de la carpeta prompts:
 
-**Importante:** los documentos son equivalentes en contenido, pero no en mecanismo de acceso. En Claude Web los adjuntamos manualmente; Claude Code los descubre y lee desde el repositorio. Esa diferencia es parte del entorno que estamos estudiando.
+- [contexto-web.md](prompts/contexto-web.md): el contenido de los cinco archivos que ambos necesitan conocer.
+- [mensaje-unico.md](prompts/mensaje-unico.md): el mensaje exacto que se enviará a ambos.
 
-Una sola ejecución sirve como **demostración**, no como prueba causal o estadística. Si los modelos son distintos, registra esa diferencia como una limitación adicional.
+Esta es una **demostración controlada en información**, no un estudio estadístico. El mecanismo de acceso a esa información sí difiere, y es parte de lo que queremos observar.
 
-## 4. Preparación en Windows
+## 4. Preparación
 
-Necesitas Git, Python 3, PowerShell, VS Code, acceso a [Claude Web](https://claude.ai/) y Claude Code disponible desde la terminal. Codex es un respaldo opcional.
+Necesitas PowerShell, Python 3, Git, VS Code, [Claude Web](https://claude.ai/) y Claude Code instalado en la terminal.
 
-Clona el material si todavía no lo tienes:
+Si todavía no tienes el repositorio:
 
 ~~~powershell
 New-Item -ItemType Directory -Force -Path C:\Evolium | Out-Null
@@ -44,7 +43,7 @@ git clone https://github.com/Evolium-IOS/evolium-uees-fiinbro-webinar-oct26.git
 cd .\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
 ~~~
 
-Si ya tienes el repositorio:
+Si ya lo tienes y no hay modificaciones locales pendientes:
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26
@@ -52,29 +51,29 @@ git pull --ff-only
 cd .\experiments\01-ai-engineering-harness
 ~~~
 
-No ejecutes clone sobre una carpeta ya existente ni uses pull si tienes cambios locales sin revisar.
+## 5. Crear el repositorio temporal
 
-## 5. Crear el proyecto de práctica
-
-Desde la carpeta del Experimento 01:
+Desde la carpeta 01-ai-engineering-harness:
 
 ~~~powershell
 .\scripts\prepare-demo.ps1
 ~~~
 
-Se crea un repositorio Git **independiente** en C:\Evolium\webinar-experiment-01-live con los archivos:
+El script crea **C:\Evolium\webinar-experiment-01-live** con estos cinco archivos:
 
 ~~~text
+NEXT_TASK.md
 AGENTS.md
 CLAUDE.md
-NEXT_TASK.md
 src/records.py
 tests/test_records.py
 ~~~
 
-La plantilla contiene un error intencional. Si la carpeta ya existe, el script se detiene para no sobrescribir trabajo. Si es una práctica previa, consulta el paso 12 para restablecerla.
+Es un repositorio Git local **separado** del repositorio que descargaste de GitHub.
 
-## 6. Verificar la línea base
+Si la carpeta ya existe, el script se detiene para no sobrescribirla. Si es una práctica anterior, usa el paso 11 para restaurarla.
+
+## 6. Comprobar la línea base
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
@@ -83,46 +82,29 @@ git tag
 python -m unittest discover -s tests -v
 ~~~
 
-Resultado esperado: tag demo-baseline, directorio limpio al inicio y **8 pruebas, de las cuales pasan 7 y falla 1**. El fallo intencional se llama test_excludes_missing_customer_id.
+Resultado esperado: tag **demo-baseline**, código inicial sin modificaciones y **8 pruebas: 7 correctas y 1 fallo intencional**. La prueba que falla se llama test_excludes_missing_customer_id.
 
-No arregles el código todavía. Ambas modalidades deben empezar con la misma versión.
+**No arregles la función todavía.**
 
-## 7. Preparar exactamente el mismo contexto para ambos
+## 7. Condición A: Claude Web
 
-Abre [prompts/contexto-web.md](prompts/contexto-web.md). Este archivo reúne **el contenido completo de**:
+1. Abre [Claude Web](https://claude.ai/) en el navegador.
+2. Inicia una conversación nueva, sin proyecto conectado ni herramientas locales adicionales.
+3. Selecciona la misma versión de modelo que usas en Claude Code, si está disponible.
+4. Adjunta [prompts/contexto-web.md](prompts/contexto-web.md). Este documento contiene los mismos cinco archivos iniciales.
+5. Abre [prompts/mensaje-unico.md](prompts/mensaje-unico.md), copia **solo el mensaje del bloque de texto** y envíalo.
+6. Guarda la respuesta. **No copies el parche al repositorio** ni modifiques la línea base.
 
-- NEXT_TASK.md: requisitos y criterios de aceptación.
-- AGENTS.md: reglas generales de ingeniería.
-- CLAUDE.md: instrucciones de proyecto.
-- src/records.py: código inicial.
-- tests/test_records.py: pruebas iniciales.
+Observa qué solución propone y qué puede verificar realmente. Tener pruebas escritas en la respuesta no significa haberlas ejecutado.
 
-Claude Code dispone de esos archivos dentro del repositorio temporal. Claude Web recibirá una copia de sus contenidos en un solo documento adjunto.
-
-Comprueba que no hayas cambiado los archivos de la plantilla ni la línea base. **No uses el antiguo prompt que pegaba solo el código:** allí el cliente web no recibía los criterios que sí conocía el agente.
-
-## 8. Ejecución A: Claude Web
-
-1. Abre [Claude Web](https://claude.ai/).
-2. Selecciona, si está disponible, la misma familia y versión de modelo usada por Claude Code.
-3. Inicia una conversación nueva sin instrucciones o proyectos personalizados.
-4. Adjunta **[prompts/contexto-web.md](prompts/contexto-web.md)** como archivo. No adjuntes otros.
-5. Copia exactamente el texto del bloque en [prompts/mensaje-unico.md](prompts/mensaje-unico.md) y envíalo.
-6. Conserva su respuesta. No copies su propuesta al proyecto de práctica ni alteres la línea base.
-7. Registra en [BITACORA.md](BITACORA.md) qué archivos leyó, qué solución propuso, qué pruebas sugirió y qué pudo verificar realmente.
-
-Observa si Claude Web reconoce que **no tiene acceso a la terminal local**. Una respuesta que dice "las pruebas pasarían" no equivale a haberlas ejecutado.
-
-## 9. Ejecución B: Claude Code en VS Code
-
-Desde PowerShell:
+## 8. Condición B: Claude Code en VS Code
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
 code .
 ~~~
 
-Abre la terminal integrada en VS Code y verifica que estás en el repositorio temporal:
+En VS Code abre **Terminal > New Terminal** y confirma la ubicación:
 
 ~~~powershell
 Get-Location
@@ -130,23 +112,23 @@ git rev-parse --show-toplevel
 git status --short
 ~~~
 
-Ambas rutas deben ser C:\Evolium\webinar-experiment-01-live. Si hay cambios en src/ o tests/ antes de empezar, detente y restaura la línea base siguiendo el paso 12.
+Los comandos de ubicación deben apuntar a C:\Evolium\webinar-experiment-01-live. Si no es así, **corrige la carpeta antes de continuar**.
 
-Abre Claude Code **en esta misma terminal**:
+Abre Claude Code en la misma terminal:
 
 ~~~powershell
 claude
 ~~~
 
-Copia **el mismo mensaje, sin modificar una palabra**, desde [prompts/mensaje-unico.md](prompts/mensaje-unico.md). No le adjuntes manualmente el contexto: tiene que buscarlo en el repositorio.
+Pega **el mismo mensaje exacto** de [prompts/mensaje-unico.md](prompts/mensaje-unico.md). Esta vez no adjuntes contexto manualmente: el agente debe consultar los archivos que ya están en el repositorio.
 
-Autoriza lecturas, edición de los archivos de práctica, ejecución de pruebas y comandos Git de inspección. No autorices commits ni pushes.
+Autoriza únicamente inspección de archivos, edición de la copia de práctica, pruebas y comandos Git de consulta. **No autorices commits ni pushes.**
 
-Observa en el historial de ejecución si Claude Code abrió NEXT_TASK.md, AGENTS.md, CLAUDE.md y los archivos de código, y si ejecutó las pruebas.
+Fíjate si consultó los documentos y si la terminal mostró pruebas reales, no solo una afirmación del asistente.
 
-## 10. Verificación independiente
+## 9. Verificación independiente
 
-Cuando termine, sal del agente con /exit y ejecuta en la terminal normal:
+Cuando termine Claude Code, sal con /exit. En la terminal normal ejecuta:
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
@@ -156,58 +138,42 @@ git diff -- src/records.py tests/test_records.py
 git status --short
 ~~~
 
-Si se implementó correctamente, todas las pruebas deben pasar, incluida la que fallaba al inicio. En un ensayo anterior se obtuvieron 10 de 10 pruebas; el número final puede cambiar si el agente agrega más.
+Comprueba:
+- Que customer_id existe, es string y no queda vacío tras quitar espacios.
+- Que se conserva la firma pública, el orden y la independencia de los registros de entrada.
+- Que todas las pruebas pasan y el diff refleja exclusivamente la tarea.
+- Que no se realizaron commits.
 
-Verifica específicamente:
-- El identificador existe, es string y no queda vacío tras quitar espacios.
-- Se mantiene la firma pública de la función.
-- El orden y los datos de entrada no se alteran.
-- El diff no incluye modificaciones ajenas a la tarea.
-- No hay commit.
+En el ensayo previo, Claude Code pasó 10 pruebas porque añadió dos. Otro ensayo puede agregar más o menos; **no fijamos de antemano el número final**.
 
-En Windows pueden aparecer avisos LF/CRLF y carpetas __pycache__ creadas por Python; no significan por sí mismos un fallo.
+## 10. Comparar y formular una conclusión
 
-## 11. Comparación e interpretación
+Completa la [bitácora de resultados](BITACORA.md).
 
-Usa [BITACORA.md](BITACORA.md).
+Separa dos observaciones:
 
-**Separa dos preguntas distintas:**
+1. **Solución funcional:** ¿el parche del cliente web sería correcto? Para comprobarlo deberías aplicarlo a **otra copia idéntica** de la línea base y ejecutar las mismas pruebas. No afirmes que pasó o falló si no lo hiciste.
+2. **Proceso de ingeniería:** ¿qué modalidad leyó los archivos, aplicó el cambio, ejecutó las pruebas y mostró Git diff en el proyecto local?
 
-1. **Calidad de la solución:** ¿la propuesta de Claude Web cumpliría las mismas pruebas? Sin aplicar y ejecutar el parche no podemos afirmar que pasó ni que falló. Para una comparación formal de calidad, habría que aplicar cada solución sobre copias idénticas del baseline y correr la misma batería de pruebas con un evaluador independiente.
-2. **Calidad de la evidencia y del flujo:** ¿qué modalidad pudo modificar, comprobar y auditar el repositorio directamente, con qué intervención humana y qué evidencia mostró?
+**Conclusión a evaluar:** la IA puede proponer cambios en ambas condiciones; la ingeniería establece criterios de aceptación y ofrece herramientas para comprobar y auditar lo que se aplicó.
 
-La segunda pregunta es la que este webinar demuestra en vivo.
+## 11. Restaurar el experimento
 
-**Interpretación esperada, sujeta a lo observado:** los modelos pueden generar código en ambos entornos; la ingeniería define reglas, límites, pruebas, cambios controlados y trazabilidad para convertir propuestas en trabajo comprobable.
-
-No afirmes que esto demuestra mejor precisión, mayor velocidad, menos tokens o una ley universal. Eso necesitaría controlar modelos, repeticiones y mediciones adicionales.
-
-## 12. Restaurar la práctica
-
-**Advertencia:** el reset elimina cambios y archivos no versionados **dentro de C:\Evolium\webinar-experiment-01-live**. No guardes allí trabajo que quieras conservar.
+**Advertencia:** el script descarta cambios y borra archivos no versionados **dentro de C:\Evolium\webinar-experiment-01-live**. Úsalo solo cuando ya no necesites los resultados de ese ensayo.
 
 ~~~powershell
 cd C:\Evolium\evolium-uees-fiinbro-webinar-oct26\experiments\01-ai-engineering-harness
 .\scripts\reset-demo.ps1
 ~~~
 
-Luego:
+Verifica:
 
 ~~~powershell
 cd C:\Evolium\webinar-experiment-01-live
 git status --short
 git log -1 --oneline
-python -m unittest discover -s tests -v
 ~~~
 
-La salida debe volver al commit demo: baseline, con 7 pruebas aprobadas y 1 fallo intencional.
+Debes ver el commit demo: baseline y no tener cambios pendientes. Al volver a ejecutar las pruebas, aparecerá el fallo intencional.
 
-## 13. Conclusión del ejercicio
-
-Responde con evidencia:
-
-**¿Qué parte del resultado la produjo el razonamiento de la IA y qué parte hizo posible el entorno de ingeniería?**
-
-No es una competencia entre productos. Es una demostración de que una buena propuesta de código y una modificación probada, reproducible y revisable no son lo mismo.
-
-[Mensaje único](prompts/mensaje-unico.md) | [Contexto para Claude Web](prompts/contexto-web.md) | [Bitácora](BITACORA.md) | [Guion del presentador](STORY.md) | [Experimento 02](../02-bank-document-to-orion/README.md)
+[Mensaje único](prompts/mensaje-unico.md) | [Contexto para Claude Web](prompts/contexto-web.md) | [Bitácora](BITACORA.md) | [Experimento 02](../02-bank-document-to-orion/README.md)

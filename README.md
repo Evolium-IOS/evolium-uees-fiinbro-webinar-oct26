@@ -1,37 +1,35 @@
-# Experimentos del webinar UEES × FIINBRO, octubre 2026
+# Experimentos prácticos del webinar UEES y FIINBRO
 
-Material práctico para **De Ingenieros a Investigadores: cómo la IA está redefiniendo el futuro de los datos y el desarrollo de software**.
+**De Ingenieros a Investigadores: cómo la IA está redefiniendo el futuro de los datos y el desarrollo de software.**
 
-Cada experimento está pensado para que puedas **seguir las instrucciones, ejecutar las pruebas, observar resultados y repetir el ejercicio**. El repositorio también incluye el guion breve del presentador.
+Este repositorio contiene **dos experimentos reproducibles**. Cada guía empieza con una pregunta de investigación e incluye los pasos para preparar el entorno, ejecutar el experimento, verificar resultados y analizar qué aprendimos.
 
-## Comienza por aquí
+## Sigue los experimentos en orden
 
-### [Experimento 01: IA dentro del entorno de ingeniería](experiments/01-ai-engineering-harness/README.md)
+### [Experimento 01: la IA dentro de un entorno de ingeniería](experiments/01-ai-engineering-harness/README.md)
 
-**Pregunta:** ¿Qué aporta un entorno de ingeniería cuando Claude Web y Claude Code reciben el mismo mensaje y la misma documentación inicial del proyecto?
+**Pregunta:** ¿qué aporta un entorno de ingeniería cuando Claude Web y Claude Code reciben la misma tarea, el mismo mensaje y la misma información inicial?
 
-Sigue la guía desde la pregunta y la hipótesis hasta una comparación controlada con un mensaje único, el mismo contenido técnico en ambas interfaces, pruebas reales, Git y restauración del experimento.
+Primero se trabaja en Claude Web con el contexto adjunto. Después se usa Claude Code desde la terminal integrada de VS Code para aplicar, probar y revisar el cambio. El propósito es distinguir código propuesto de código verificado.
 
-[Guion de la presentación](experiments/01-ai-engineering-harness/STORY.md) | [Hoja de resultados](experiments/01-ai-engineering-harness/BITACORA.md)
+[Comenzar experimento 01](experiments/01-ai-engineering-harness/README.md)
 
-### [Experimento 02: de un documento bancario a un sistema](experiments/02-bank-document-to-orion/README.md)
+### [Experimento 02: extraer y validar datos de un PDF bancario](experiments/02-bank-document-to-orion/README.md)
 
-**Pregunta:** ¿Qué hace falta para convertir una extracción de datos desde un PDF en información confiable para una operación real?
+**Pregunta:** ¿cómo sabemos que un dato extraído de un documento es suficientemente confiable para utilizarlo en una operación?
 
-El segundo experimento incluye la aplicación Streamlit, muestras de PDF, preparación del entorno y una guía de reproducción. Se relaciona con ORION mediante preguntas de ingeniería, validación y gobernanza. No implica que el extractor sea el mismo sistema que ORION.
+Se ejecuta una aplicación Streamlit con PDFs de demostración, rutas TEXT y VISION, extracción, evidencia y validación. Luego se identifican los controles adicionales que necesitaría una operación real.
 
-[Guía de estudiantes](experiments/02-bank-document-to-orion/GUIA_ESTUDIANTE.md)
+[Comenzar experimento 02](experiments/02-bank-document-to-orion/README.md)
 
-## Requisitos generales
+## Qué necesitas
 
-- Git instalado.
-- Visual Studio Code y terminal.
-- Python para el Experimento 01; entorno con dependencias y clave API para ejecutar la extracción real en el Experimento 02.
-- Acceso a Claude Web para la primera parte del Experimento 01.
-- Claude Code o Codex para la segunda parte del Experimento 01.
+- Windows con PowerShell, Git, Python y VS Code.
+- Para el experimento 01: acceso a Claude Web y Claude Code desde terminal (Codex es opcional como respaldo).
+- Para el experimento 02: una clave válida de OpenAI API y facturación API configurada. Una suscripción de ChatGPT no incluye necesariamente ese consumo.
 
-## Seguridad
+## Importante
 
-Este repositorio es público. Nunca subas claves API, archivos `.env`, credenciales, documentos bancarios privados, datos personales reales ni secretos de producción.
+Los ejemplos son de investigación y demostración, no de producción. No subas datos bancarios reales, credenciales, claves API ni archivos `.env`.
 
-[Guía del presentador](PRESENTER_RUNBOOK.md) | [Lista de ensayo](shared/REHEARSAL_CHECKLIST.md)
+**Para quien presenta el webinar:** [guía de presentación y lista de ensayo](PRESENTER_RUNBOOK.md).

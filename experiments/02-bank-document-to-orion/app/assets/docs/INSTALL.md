@@ -125,22 +125,22 @@ La ruta:
 
 ## 9. Componentes reales del proyecto
 
-### Router — `app/pdf_router.py`
+### Router: `app/pdf_router.py`
 Extrae texto con `pdfplumber` y usa heurísticas de longitud/cantidad de palabras para decidir TEXT o VISION.
 
-### Orquestador TEXT — `app/orchestrator_text.py`
+### Orquestador TEXT: `app/orchestrator_text.py`
 Extrae, valida y ejecuta reparación acotada.
 
-### Orquestador VISION — `app/orchestrator_vision.py`
+### Orquestador VISION: `app/orchestrator_vision.py`
 Renderiza páginas, ejecuta OCR y aplica el mismo patrón general de validación/reparación.
 
-### Validador/utilidades — `app/utility_pdf.py`
+### Validador/utilidades: `app/utility_pdf.py`
 Contiene extracción de PDF, llamadas al modelo, validación, evidencia y utilidades OCR.
 
-### UI — `app/ui_streamlit.py`
+### UI: `app/ui_streamlit.py`
 Permite subir PDF, seleccionar banco, observar el routing y ejecutar extracción/validación.
 
-## 10. Campos — TEXT
+## 10. Campos: TEXT
 
 - bank_name
 - customer_name
@@ -155,7 +155,7 @@ Permite subir PDF, seleccionar banco, observar el routing y ejecutar extracción
 - total_checks_paid
 - ending_balance
 
-## 11. Campos — VISION
+## 11. Campos: VISION
 
 - bank_name
 - account_number

@@ -1,4 +1,4 @@
-# Guion — Experimento 02
+# Guion: Experimento 02
 
 ## Entrada
 

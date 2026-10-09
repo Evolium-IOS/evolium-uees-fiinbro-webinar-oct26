@@ -1,4 +1,4 @@
-# Experimento 02 — De documentos bancarios a un sistema operativo
+# Experimento 02: De documentos bancarios a un sistema operativo
 
 ## Pregunta
 
